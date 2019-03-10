@@ -10,43 +10,43 @@ $alpha = [a-zA-Z]
 
 tokens :-
 $white+       ;
-  "Illegibilus".*        ;
-  Engorgio        { tok (\p s -> TokenPlus p)}
-  Reducio         { tok (\p s -> TokenMinus p) }
-  Inflatus          { tok (\p s -> TokenTimes p) }
-  Diminuando             { tok (\p s -> TokenDiv p) }
-  Gemininio           { tok (\p s -> TokenDouble p) }
-  Episkey           { tok (\p s -> TokenSum p) }
-  Accio              { tok (\p s -> TokenGet p) }
-  Ascendio              { tok (\p s -> TokenHead p) }
-  PrioriIncantatem             { tok (\p s -> TokenLast p )}
-  Lumos             { tok (\p s -> TokenLParen p) }
-  Nox             { tok (\p s -> TokenRParen p) }
-  Depulso             { tok (\p s -> TokenAddEnd p) }
-  Mibilibarbus             { tok (\p s -> TokenAddFront p) }
-  Expelliarmus             { tok (\p s -> TokenRemove p) }
-  Ventus             { tok (\p s -> TokenInit p) }
-  Obliviate             { tok (\p s -> TokenTail p) }
-  Fidelius             { tok (\p s -> TokenEq p) }
-  Appare             { tok (\p s -> TokenLet p) }
-  Vestigium             { tok (\p s -> TokenIn p) }
-  Imperio             { tok (\p s -> TokenIf p) }
-  Incendio             { tok (\p s -> TokenThen p) }
-  Aguamenti             { tok (\p s -> TokenElse p) }
-  Epoximise             { tok (\p s -> TokenConcat p) }
-  Alohomora             { tok (\p s -> TokenOpen p) }
-  Colloportus             { tok (\p s -> TokenClose p) }
-  Legilimens             { tok (\p s -> TokenRead p) }
-  Flagrate             { tok (\p s -> TokenWrite p) }
-  EverteStatum             { tok (\p s -> TokenRevert p) }
-  WingardiumLeviosa             { tok (\p s -> TokenBegin p) }
-  FiniteIncantatem             { tok (\p s -> TokenEnd p) }
-  AlarteAscendere             { tok (\p s -> TokenPower p) }
-  Hogwarts             { tok (\p s -> TokenArrType p) }
-  Wizard             { tok (\p s -> TokenIntType p) }
-  $alpha+          { tok (\p s -> TokenVar p) }
-  $digit+          { tok (\p s -> TokenInt p (read s)) }
-  
+  Illegibilus        ;
+  Engorgio                           { tok (\p s -> TokenPlus p)}
+  Reducio                            { tok (\p s -> TokenMinus p) }
+  Inflatus                           { tok (\p s -> TokenTimes p) }
+  Diminuando                         { tok (\p s -> TokenDiv p) }
+  Gemininio                          { tok (\p s -> TokenDuplicate p) }
+  Episkey                            { tok (\p s -> TokenSum p) }
+  Accio                              { tok (\p s -> TokenGet p) }
+  Ascendio                           { tok (\p s -> TokenHead p) }
+  PrioriIncantatem                   { tok (\p s -> TokenLast p )}
+  Lumos                              { tok (\p s -> TokenLParen p) }
+  Nox                                { tok (\p s -> TokenRParen p) }
+  Depulso                            { tok (\p s -> TokenAddEnd p) }
+  Mibilibarbus                       { tok (\p s -> TokenAddFront p) }
+  Expelliarmus                       { tok (\p s -> TokenRemove p) }
+  Ventus                             { tok (\p s -> TokenInit p) }
+  Obliviate                          { tok (\p s -> TokenTail p) }
+  Fidelius                           { tok (\p s -> TokenEq p) }
+  Appare                             { tok (\p s -> TokenLet p) }
+  Vestigium                          { tok (\p s -> TokenIn p) }
+  Imperio                            { tok (\p s -> TokenIf p) }
+  Incendio                           { tok (\p s -> TokenThen p) }
+  Aguamenti                          { tok (\p s -> TokenElse p) }
+  Epoximise                          { tok (\p s -> TokenConcat p) }
+  Alohomora                          { tok (\p s -> TokenOpen p) }
+  Colloportus                        { tok (\p s -> TokenClose p) }
+  Legilimens                         { tok (\p s -> TokenRead p) }
+  Flagrate                           { tok (\p s -> TokenWrite p) }
+  EverteStatum                       { tok (\p s -> TokenRevert p) }
+  WingardiumLeviosa                  { tok (\p s -> TokenBegin p) }
+  FiniteIncantatem                   { tok (\p s -> TokenEnd p) }
+  AlarteAscendere                    { tok (\p s -> TokenPower p) }
+  Hogwarts                           { tok (\p s -> TokenArrType p) }
+  Wizard                             { tok (\p s -> TokenIntType p) }
+  $alpha [$alpha $digit \_ \’]*      { tok (\p s -> TokenVar p s) }
+  $digit+                            { tok (\p s -> TokenInt p (read s)) }
+  \:                                 { tok (\p s -> TokenHasType p) }
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -56,35 +56,83 @@ tok f p s = f p s
 
 -- The token type:
 data SpellBookToken =
-  TokenForward AlexPosn        |
-  TokenRotate  AlexPosn        |
-  TokenDigit AlexPosn Int      |
+  TokenPlus AlexPosn        |
+  TokenMinus  AlexPosn        |
+  TokenTimes AlexPosn       |
+  TokenDiv AlexPosn         |
+  TokenDuplicate AlexPosn          |
+  TokenSum AlexPosn             |
+  TokenGet AlexPosn           |
+  TokenHead AlexPosn           |
+  TokenLast AlexPosn           |
+  TokenLParen AlexPosn          |
+  TokenRParen AlexPosn            |
+  TokenAddEnd AlexPosn         |
+  TokenAddFront AlexPosn        |
+  TokenRemove AlexPosn        |
+  TokenInit AlexPosn        |
+  TokenTail AlexPosn        |
+  TokenEq AlexPosn        |
+  TokenLet AlexPosn        |
+  TokenIn AlexPosn        |
+  TokenIf AlexPosn        |
+  TokenThen AlexPosn        |
+  TokenElse AlexPosn        |
+  TokenConcat AlexPosn        |
+  TokenOpen AlexPosn        |
+  TokenClose AlexPosn        |
+  TokenRead AlexPosn        |
+  TokenWrite AlexPosn        |
+  TokenRevert AlexPosn        |
+  TokenBegin AlexPosn        |
+  TokenEnd AlexPosn        |
+  TokenPower AlexPosn        |
+  TokenArrType AlexPosn        |
+  TokenIntType AlexPosn        |
   TokenInt AlexPosn Int        |
-  TokenCheck AlexPosn          |
-  TokenIf AlexPosn             |
-  TokenThen AlexPosn           |
-  TokenElse AlexPosn           |
-  TokenLeft AlexPosn           |
-  TokenRight AlexPosn          |
-  TokenSeq AlexPosn            |
-  TokenLParen AlexPosn         |
-  TokenRParen AlexPosn
+  TokenVar AlexPosn String      |
+  TokenHasType AlexPosn
   deriving (Eq,Show)
 
 tokenPosn :: SpellBookToken -> String
-tokenPosn (TokenForward (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenRotate  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenDigit  (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenInt  (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenCheck  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenPlus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenMinus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTimes (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenDiv (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenDuplicate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenSum (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenGet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenHead (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLast (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenRParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenAddEnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenAddFront (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenRemove (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenInit (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTail (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenIn (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenLeft (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenRight (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenSeq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenLParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenRParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenConcat (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenOpen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenClose (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenRead (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenWrite (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenRevert (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenBegin (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenEnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenPower (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenArrType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenIntType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenVar (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenInt (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenHasType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+
+
 
 
 }
