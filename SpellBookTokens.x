@@ -30,17 +30,18 @@ $white+       ;
   Fidelius                           { tok (\p s -> TokenEq p) }
   Appare                             { tok (\p s -> TokenLet p) }
   Vestigium                          { tok (\p s -> TokenIn p) }
-  Imperio                            { tok (\p s -> TokenIf p) }
+  Confundo                           { tok (\p s -> TokenIf p) }
   Incendio                           { tok (\p s -> TokenThen p) }
   Aguamenti                          { tok (\p s -> TokenElse p) }
   Epoximise                          { tok (\p s -> TokenConcat p) }
-  Alohomora                          { tok (\p s -> TokenOpen p) }
-  Colloportus                        { tok (\p s -> TokenClose p) }
+  Alohomora                          { tok (\p s -> TokenBegin p) }
+  Colloportus                        { tok (\p s -> TokenEnd p) }
   Legilimens                         { tok (\p s -> TokenRead p) }
   Flagrate                           { tok (\p s -> TokenWrite p) }
   EverteStatum                       { tok (\p s -> TokenRevert p) }
-  WingardiumLeviosa                  { tok (\p s -> TokenBegin p) }
-  FiniteIncantatem                   { tok (\p s -> TokenEnd p) }
+  WingardiumLeviosa                  { tok (\p s -> TokenWhile p) }
+  Imperio                            { tok (\p s -> TokenDo p)}
+  FiniteIncantatem                   { tok (\p s -> TokenEndWhile p) }
   AlarteAscendere                    { tok (\p s -> TokenPower p) }
   Hogwarts                           { tok (\p s -> TokenArrType p) }
   Wizard                             { tok (\p s -> TokenIntType p) }
