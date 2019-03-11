@@ -16,7 +16,7 @@ $white+       ;
   Inflatus                           { tok (\p s -> TokenTimes p) }
   Diminuando                         { tok (\p s -> TokenDiv p) }
   Geminio                            { tok (\p s -> TokenDuplicate p) }
-  Ferula                            { tok (\p s -> TokenSum p) }
+  Ferula                             { tok (\p s -> TokenSum p) }
   Accio                              { tok (\p s -> TokenGet p) }
   Ascendio                           { tok (\p s -> TokenHead p) }
   PrioriIncantatem                   { tok (\p s -> TokenLast p )}
@@ -25,7 +25,7 @@ $white+       ;
   lumos                              { tok (\p s -> TokenTrue p)}
   nox                                { tok (\p s -> TokenFalse p)}
   Depulso                            { tok (\p s -> TokenAddEnd p) }
-  Flipendo                       { tok (\p s -> TokenAddFront p) }
+  Flipendo                           { tok (\p s -> TokenAddFront p) }
   Expelliarmus                       { tok (\p s -> TokenRemove p) }
   Ventus                             { tok (\p s -> TokenInit p) }
   Obliviate                          { tok (\p s -> TokenTail p) }
