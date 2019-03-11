@@ -16,14 +16,16 @@ $white+       ;
   Inflatus                           { tok (\p s -> TokenTimes p) }
   Diminuando                         { tok (\p s -> TokenDiv p) }
   Geminio                            { tok (\p s -> TokenDuplicate p) }
-  Episkey                            { tok (\p s -> TokenSum p) }
+  Ferula                            { tok (\p s -> TokenSum p) }
   Accio                              { tok (\p s -> TokenGet p) }
   Ascendio                           { tok (\p s -> TokenHead p) }
   PrioriIncantatem                   { tok (\p s -> TokenLast p )}
-  Lumos                              { tok (\p s -> TokenLParen p) }
-  Nox                                { tok (\p s -> TokenRParen p) }
+  \(                                 { tok (\p s -> TokenLParen p) }
+  \)                                 { tok (\p s -> TokenRParen p) }
+  lumos                              { tok (\p s -> TokenTrue p)}
+  nox                                { tok (\p s -> TokenFalse p)}
   Depulso                            { tok (\p s -> TokenAddEnd p) }
-  Mobilibarbus                       { tok (\p s -> TokenAddFront p) }
+  Flipendo                       { tok (\p s -> TokenAddFront p) }
   Expelliarmus                       { tok (\p s -> TokenRemove p) }
   Ventus                             { tok (\p s -> TokenInit p) }
   Obliviate                          { tok (\p s -> TokenTail p) }
@@ -38,6 +40,7 @@ $white+       ;
   Colloportus                        { tok (\p s -> TokenEnd p) }
   Legilimens                         { tok (\p s -> TokenRead p) }
   Flagrate                           { tok (\p s -> TokenWrite p) }
+  Apparate                           { tok (\p s -> TokenWriteFile p)}
   EverteStatum                       { tok (\p s -> TokenRevert p) }
   WingardiumLeviosa                  { tok (\p s -> TokenWhile p) }
   Imperio                            { tok (\p s -> TokenDo p)}
@@ -45,10 +48,14 @@ $white+       ;
   AlarteAscendere                    { tok (\p s -> TokenPower p) }
   Hogwarts                           { tok (\p s -> TokenArrType p) }
   Wizard                             { tok (\p s -> TokenIntType p) }
-  $alpha [$alpha $digit \_ \’]*      { tok (\p s -> TokenVar p s) }
+  Light                              { tok (\p s -> TokenBool p)}
+  Confringo                          { tok (\p s -> TokenGetXY p)}
+  $alpha [$alpha $digit \_ \`]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
   \[ [$digit+,$digit+]* \]           { tok (\p s -> TokenArr p s) }
-  \:                                 { tok (\p s -> TokenHasType p) }
+  \:                                 { tok (\p s -> TokenOfType p) }
+  \;                                 { tok (\p s -> TokenEndStatement p)}
+  $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -93,8 +100,16 @@ data SpellBookToken =
   TokenArrType AlexPosn      	|
   TokenIntType AlexPosn      	|
   TokenInt AlexPosn Int      	|
+  TokenArr AlexPosn String    |
   TokenVar AlexPosn String    |
-  TokenHasType AlexPosn
+  TokenOfType AlexPosn        |
+  TokenWriteFile AlexPosn     |
+  TokenTrue AlexPosn          |
+  TokenFalse AlexPosn         |
+  TokenBool AlexPosn          |
+  TokenGetXY AlexPosn         |
+  TokenEndStatement AlexPosn  |
+  TokenFile AlexPosn String
   deriving (Eq,Show)
 
 tokenPosn :: SpellBookToken -> String
@@ -134,9 +149,14 @@ tokenPosn (TokenArrType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenIntType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenVar (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenInt (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenHasType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-
-
-
+tokenPosn (TokenOfType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenEndStatement (AlexPn a l c)) = show(l) ++ ":" ++ show(C)
+tokenPosn (TokenFile (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenArr (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenWriteFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenBool (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenGetXY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 
 }
