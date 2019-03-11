@@ -47,7 +47,7 @@ $white+       ;
   Wizard                             { tok (\p s -> TokenIntType p) }
   $alpha [$alpha $digit \_ \’]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
-  \[ [$digit+,$digit+]* \]          { tok (\p s -> TokenArr p s) }
+  \[ [$digit+,$digit+]* \]           { tok (\p s -> TokenArr p s) }
   \:                                 { tok (\p s -> TokenHasType p) }
 
 {

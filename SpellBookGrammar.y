@@ -94,7 +94,7 @@ data Charm = Episkey Charm
            | Hogwarts [Int]
            deriving Show
 
-data Jinx = sd
+data Jinx = 
           | Lumos Jinx Nox
           deriving Show
 
