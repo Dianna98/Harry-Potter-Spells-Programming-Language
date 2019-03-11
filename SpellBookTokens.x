@@ -80,8 +80,9 @@ data SpellBookToken =
   TokenThen AlexPosn        |
   TokenElse AlexPosn        |
   TokenConcat AlexPosn        |
-  TokenOpen AlexPosn        |
-  TokenClose AlexPosn        |
+  TokenWhile AlexPosn        |
+  TokenDo AlexPosn        |
+  TokenEndWhile AlexPosn      |
   TokenRead AlexPosn        |
   TokenWrite AlexPosn        |
   TokenRevert AlexPosn        |
@@ -119,8 +120,9 @@ tokenPosn (TokenIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenConcat (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenOpen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenClose (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenDo (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenEndWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRead (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWrite (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRevert (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
