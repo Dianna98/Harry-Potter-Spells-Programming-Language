@@ -11,7 +11,7 @@ import SpellBookTokens
   Reducio                            {TokenMinus _ }
   Inflatus                           {TokenTimes _ }
   Diminuando                         {TokenDiv _ }
-  Gemininio                          {TokenDuplicate _ }
+  Geminio                            {TokenDuplicate _ }
   Episkey                            {TokenSum _ }
   Accio                              {TokenGet _ }
   Ascendio                           {TokenHead _ }
@@ -19,7 +19,7 @@ import SpellBookTokens
   Lumos                              {TokenLParen _ }
   Nox                                {TokenRParen _ }
   Depulso                            {TokenAddEnd _ }
-  Mibilibarbus                       {TokenAddFront _ }
+  Mobilibarbus                       {TokenAddFront _ }
   Expelliarmus                       {TokenRemove _ }
   Ventus                             {TokenInit _ }
   Obliviate                          {TokenTail _ }
@@ -41,9 +41,10 @@ import SpellBookTokens
   AlarteAscendere                    {TokenPower  _ }
   Hogwarts                           {TokenArrType _ }
   Wizard                             {TokenIntType _ }
-  $alpha [$alpha $digit \_ \’]*      {TokenVar _  $$}
-  $digit+                            {TokenInt _  $$}
-  \:                                 {TokenHasType _ }
+  Horcrux                            {TokenVar _  $$ }
+  int                                {TokenInt _  $$ }
+  arr                                {TokenArr _ $$ }
+  ':'                                {TokenHasType _ }
 
 
 %right in
@@ -63,14 +64,50 @@ Exp : let var '=' Exp in Exp { Let $2 $4 $6 }
 
 {
 parseError :: [Token] -> a
-parseError _ = error "Morsmordre! There is a parsing error"
-data Exp = Let String Exp Exp
-         | Plus Exp Exp
-         | Minus Exp Exp
-         | Times Exp Exp
-         | Div Exp Exp
-         | Negate Exp
-         | Int Int
-         | Var String
-         deriving Show
+parseError _ = error "Morsmordre! There is a parsing error!"
+data Spell = Engorgio Spell Spell
+           | Reducio Spell Spell
+           | Inflatus Spell Spell
+           | Diminuando Spell Spell
+           | AlarteAscendere Spell Spell
+           | Accio Spell Charm
+           | Ascendio Charm
+           | PrioriIncantatem Charm
+           | Geminio Spell
+           | Alohomora Spell Colloportus
+           | Lumos Charm Nox
+           | Horcrux String
+           | Wizard Int
+           deriving Show
+
+data Charm = Episkey Charm
+           | Depulso Spell Charm
+           | Mobilibarbus Spell Charm
+           | Expelliarmus Spell Charm
+           | Ventus Charm
+           | Obliviate Charm
+           | Epoximise Charm Charm
+           | EverteStatum Charm
+           | Alohomora Charm Colloportus
+           | Lumos Charm Nox
+           | Horcrux String
+           | Hogwarts [Int]
+           deriving Show
+
+data Jinx = sd
+          | Lumos Jinx Nox
+          deriving Show
+
+data Cast = Confundo Jinx Incendio Cast Aguamenti Cast
+           | WingardiumLeviosa Jinx Imperio Cast FiniteIncantatem
+           | Confundo Jinx Incendio Cast
+           | Alohomora Cast Colloportus
+           | Fidelius Horcrux Magic
+           | Legilimens String
+           | Flagrate String
+           | Horcrux : Wizard
+           | Horcrux : Hogwarts
+           deriving Show
+
+data Magic = Spell | Charm | Jinx deriving Show
 }

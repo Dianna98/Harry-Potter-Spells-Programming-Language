@@ -15,7 +15,7 @@ $white+       ;
   Reducio                            { tok (\p s -> TokenMinus p) }
   Inflatus                           { tok (\p s -> TokenTimes p) }
   Diminuando                         { tok (\p s -> TokenDiv p) }
-  Gemininio                          { tok (\p s -> TokenDuplicate p) }
+  Geminio                            { tok (\p s -> TokenDuplicate p) }
   Episkey                            { tok (\p s -> TokenSum p) }
   Accio                              { tok (\p s -> TokenGet p) }
   Ascendio                           { tok (\p s -> TokenHead p) }
@@ -23,7 +23,7 @@ $white+       ;
   Lumos                              { tok (\p s -> TokenLParen p) }
   Nox                                { tok (\p s -> TokenRParen p) }
   Depulso                            { tok (\p s -> TokenAddEnd p) }
-  Mibilibarbus                       { tok (\p s -> TokenAddFront p) }
+  Mobilibarbus                       { tok (\p s -> TokenAddFront p) }
   Expelliarmus                       { tok (\p s -> TokenRemove p) }
   Ventus                             { tok (\p s -> TokenInit p) }
   Obliviate                          { tok (\p s -> TokenTail p) }
@@ -47,6 +47,7 @@ $white+       ;
   Wizard                             { tok (\p s -> TokenIntType p) }
   $alpha [$alpha $digit \_ \’]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
+  \[ [$digit+,$digit+]* \]          { tok (\p s -> TokenArr p s) }
   \:                                 { tok (\p s -> TokenHasType p) }
 
 {
@@ -57,41 +58,41 @@ tok f p s = f p s
 
 -- The token type:
 data SpellBookToken =
-  TokenPlus AlexPosn        	|
-  TokenMinus  AlexPosn        	|
-  TokenTimes AlexPosn       	|
-  TokenDiv AlexPosn        	|
-  TokenDuplicate AlexPosn       |
-  TokenSum AlexPosn            	|
-  TokenGet AlexPosn           	|
-  TokenHead AlexPosn           	|
-  TokenLast AlexPosn           	|
+  TokenPlus AlexPosn        |
+  TokenMinus  AlexPosn        |
+  TokenTimes AlexPosn       |
+  TokenDiv AlexPosn         |
+  TokenDuplicate AlexPosn          |
+  TokenSum AlexPosn             |
+  TokenGet AlexPosn           |
+  TokenHead AlexPosn           |
+  TokenLast AlexPosn           |
   TokenLParen AlexPosn          |
-  TokenRParen AlexPosn          |
-  TokenAddEnd AlexPosn         	|
+  TokenRParen AlexPosn            |
+  TokenAddEnd AlexPosn         |
   TokenAddFront AlexPosn        |
-  TokenRemove AlexPosn        	|
-  TokenInit AlexPosn        	|
-  TokenTail AlexPosn        	|
-  TokenEq AlexPosn        	|
-  TokenLet AlexPosn        	|
-  TokenIn AlexPosn        	|
-  TokenIf AlexPosn        	|
-  TokenThen AlexPosn        	|
-  TokenElse AlexPosn        	|
-  TokenConcat AlexPosn        	|
-  TokenWhile AlexPosn        	|
-  TokenDo AlexPosn        	|
-  TokenEndWhile AlexPosn      	|
-  TokenRead AlexPosn        	|
-  TokenWrite AlexPosn        	|
-  TokenRevert AlexPosn        	|
-  TokenBegin AlexPosn        	|
-  TokenEnd AlexPosn        	|
-  TokenPower AlexPosn        	|
-  TokenArrType AlexPosn        	|
-  TokenIntType AlexPosn        	|
-  TokenInt AlexPosn Int        	|
+  TokenRemove AlexPosn        |
+  TokenInit AlexPosn        |
+  TokenTail AlexPosn        |
+  TokenEq AlexPosn        |
+  TokenLet AlexPosn        |
+  TokenIn AlexPosn        |
+  TokenIf AlexPosn        |
+  TokenThen AlexPosn        |
+  TokenElse AlexPosn        |
+  TokenConcat AlexPosn        |
+  TokenWhile AlexPosn        |
+  TokenDo AlexPosn        |
+  TokenEndWhile AlexPosn      |
+  TokenRead AlexPosn        |
+  TokenWrite AlexPosn        |
+  TokenRevert AlexPosn        |
+  TokenBegin AlexPosn        |
+  TokenEnd AlexPosn        |
+  TokenPower AlexPosn        |
+  TokenArrType AlexPosn        |
+  TokenIntType AlexPosn        |
+  TokenInt AlexPosn Int        |
   TokenVar AlexPosn String      |
   TokenHasType AlexPosn
   deriving (Eq,Show)
