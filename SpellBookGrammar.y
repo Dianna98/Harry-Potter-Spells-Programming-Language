@@ -52,6 +52,13 @@ import SpellBookTokens
   ':'                                {TokenOfType _ }
 --  endStatement                       {TokenEndStatement _ }
   file                               {TokenFile _ $$ }
+  Entomorphis                        {TokenLess _ }
+  CarpeRetractum                     {TokenLessEq _ }
+  Defodio                            {TokenGreater _ }
+  Deprimo                            {TokenGreaterEq _ }
+  Caterwauling                       {TokenEqEq _ }
+  Crucio                             {TokenNot _ }
+  Impedimenta                        {TokenNotEq _ }
 
 
 %right in
@@ -85,7 +92,14 @@ Charm : Ferula Charm                        { Ferula $2 }
       | arr                                 { Hogwarts $1 }
       | horcrux                             { $1 }
 
-Jinx : '(' Jinx ')'                       {  $2 }
+Jinx : Entomorphis Spell Spell            { Entomorphis $2 $3 }
+     | CarpeRetractum Spell Spell         { CarpeRetractum $2 $3 }
+     | Defodio Spell Spell                { Defodio $2 $3 }
+     | Deprimo Spell Spell                { Deprimo $2 $3 }
+     | Caterwauling Spell Spell           { Caterwauling $2 $3 }
+     | Impedimenta Spell Spell            { Imprediments $2 $3 }
+     | Crucio Jinx                        { Crucio $2 }
+     | '(' Jinx ')'                       {  $2 }
      | lumos                              { lumos }
      | nox                                { lox }
      | horcrux                            { $1 }
@@ -118,7 +132,6 @@ data Spell = Engorgio Spell Spell
            | Ascendio Charm
            | PrioriIncantatem Charm
            | Geminio Spell
-          -- | Lumos Spell Nox
            | int
            deriving Show
 
@@ -131,13 +144,18 @@ data Charm = Ferula Charm
            | Epoximise Charm Charm
            | EverteStatum Charm
            | Confringo Spell Spell Charm
-        --   | Lumos Charm Nox
            | arr
            deriving Show
 
-data Jinx = lumos
+data Jinx = Entomorphis Spell Spell
+          | CarpeRetractum Spell Spell
+          | Defodio Spell Spell
+          | Deprimo Spell Spell
+          | Caterwauling Spell Spell
+          | Impedimenta Spell Spell
+          | Crucio Jinx
+          | lumos
           | nox
-      --    | Lumos Jinx Nox
           deriving Show
 
 data Cast = Confundo Jinx Incendio Cast Aguamenti Cast

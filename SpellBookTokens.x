@@ -56,6 +56,13 @@ $white+       ;
   \:                                 { tok (\p s -> TokenOfType p) }
   \;                                 { tok (\p s -> TokenEndStatement p)}
   $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
+  Entomorphis                        { tok (\p s -> TokenLess p)}
+  CarpeRetractum                     { tok (\p s -> TokenLessEq p)}
+  Defodio                            { tok (\p s -> TokenGreater p)}
+  Deprimo                            { tok (\p s -> TokenGreaterEq p)}
+  Caterwauling                       { tok (\p s -> TokenEqEq p)}
+  Crucio                             { tok (\p s -> TokenNot p)}
+  Impedimenta                        { tok (\p s -> TokenNotEq p)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -109,6 +116,13 @@ data SpellBookToken =
   TokenBool AlexPosn          |
   TokenGetXY AlexPosn         |
   TokenEndStatement AlexPosn  |
+  TokenNot AlexPosn           |
+  TokenLess AlexPosn          |
+  TokenLessEq AlexPosn        |
+  TokenGreater AlexPosn       |
+  TokenGreaterEq AlexPosn     |
+  TokenEqEq AlexPosn          |
+  TokenNotEq AlexPosn         |
   TokenFile AlexPosn String
   deriving (Eq,Show)
 
@@ -158,5 +172,14 @@ tokenPosn (TokenFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWriteFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenBool (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGetXY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenNot (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenEqEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLess (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLessEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenGreaterEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+
+
 
 }
