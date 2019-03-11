@@ -52,7 +52,7 @@ $white+       ;
   Confringo                          { tok (\p s -> TokenGetXY p)}
   $alpha [$alpha $digit \_ \`]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
-  \[ [$digit+,$digit+]* \]           { tok (\p s -> TokenArr p s) }
+  \[ [$digit \,]* \]                 { tok (\p s -> TokenArr p s) }
   \:                                 { tok (\p s -> TokenOfType p) }
   \;                                 { tok (\p s -> TokenEndStatement p)}
   $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
