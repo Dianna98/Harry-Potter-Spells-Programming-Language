@@ -62,38 +62,38 @@ data SpellBookToken =
   TokenMinus  AlexPosn       	|
   TokenTimes AlexPosn       	|
   TokenDiv AlexPosn         	|
-  TokenDuplicate AlexPosn       |
-  TokenSum AlexPosn             |
-  TokenGet AlexPosn           	|
-  TokenHead AlexPosn           	|
-  TokenLast AlexPosn           	|
-  TokenLParen AlexPosn          |
-  TokenRParen AlexPosn          |
-  TokenAddEnd AlexPosn         	|
-  TokenAddFront AlexPosn        |
-  TokenRemove AlexPosn        	|
+  TokenDuplicate AlexPosn     |
+  TokenSum AlexPosn           |
+  TokenGet AlexPosn         	|
+  TokenHead AlexPosn         	|
+  TokenLast AlexPosn         	|
+  TokenLParen AlexPosn        |
+  TokenRParen AlexPosn        |
+  TokenAddEnd AlexPosn       	|
+  TokenAddFront AlexPosn      |
+  TokenRemove AlexPosn       	|
   TokenInit AlexPosn        	|
   TokenTail AlexPosn        	|
-  TokenEq AlexPosn        	|
-  TokenLet AlexPosn        	|
-  TokenIn AlexPosn        	|
-  TokenIf AlexPosn        	|
+  TokenEq AlexPosn           	|
+  TokenLet AlexPosn         	|
+  TokenIn AlexPosn          	|
+  TokenIf AlexPosn           	|
   TokenThen AlexPosn        	|
   TokenElse AlexPosn        	|
-  TokenConcat AlexPosn        	|
+  TokenConcat AlexPosn       	|
   TokenWhile AlexPosn        	|
-  TokenDo AlexPosn        	|
-  TokenEndWhile AlexPosn      	|
+  TokenDo AlexPosn          	|
+  TokenEndWhile AlexPosn     	|
   TokenRead AlexPosn        	|
   TokenWrite AlexPosn        	|
-  TokenRevert AlexPosn        	|
-  TokenBegin AlexPosn        	|	
-  TokenEnd AlexPosn        	|		
+  TokenRevert AlexPosn       	|
+  TokenBegin AlexPosn        	|
+  TokenEnd AlexPosn        	  |
   TokenPower AlexPosn       	|
-  TokenArrType AlexPosn        	|
-  TokenIntType AlexPosn        	|
-  TokenInt AlexPosn Int        	|
-  TokenVar AlexPosn String      |
+  TokenArrType AlexPosn      	|
+  TokenIntType AlexPosn      	|
+  TokenInt AlexPosn Int      	|
+  TokenVar AlexPosn String    |
   TokenHasType AlexPosn
   deriving (Eq,Show)
 
