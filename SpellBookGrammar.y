@@ -94,7 +94,7 @@ data Charm = Episkey Charm
            | Hogwarts [Int]
            deriving Show
 
-data Jinx = 
+data Jinx =
           | Lumos Jinx Nox
           deriving Show
 
@@ -105,6 +105,7 @@ data Cast = Confundo Jinx Incendio Cast Aguamenti Cast
            | Fidelius Horcrux Magic
            | Legilimens String
            | Flagrate String
+           | Appare Fidelius Horcrux Magic Vestigium Cast
            | Horcrux : Wizard
            | Horcrux : Hogwarts
            deriving Show
