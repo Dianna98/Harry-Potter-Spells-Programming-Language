@@ -47,9 +47,9 @@ import SpellBookTokens
   Hogwarts                           {TokenArrType _ }
   Wizard                             {TokenIntType _ }
 --  horcrux                            {TokenVar _  $$ }
-  horcruxInt                            {TokenVar _  $$ }
-  horcruxArr                            {TokenVar _  $$ }
-  horcruxBool                            {TokenVar _  $$ }
+  horcruxInt                         {TokenVar _  $$ }
+  horcruxArr                         {TokenVar _  $$ }
+  horcruxBool                        {TokenVar _  $$ }
   int                                {TokenInt _  $$ }
   arr                                {TokenArr _ $$ }
   ':'                                {TokenOfType _ }
@@ -61,7 +61,7 @@ import SpellBookTokens
   Caterwauling                       {TokenEqEq _ }
   Crucio                             {TokenNot _ }
   Impedimenta                        {TokenNotEq _ }
-  str                                {TokenString _ $$ }
+--  str                                {TokenString _ $$ }
 
 %right Appare
 %right Vestigium
@@ -79,19 +79,19 @@ import SpellBookTokens
 %left Flagrate Apparate
 %left WingardiumLeviosa Imperio
 %%
-Cast : Confundo Jinx Incendio Cast Aguamenti Cast                   { If $2 Then $4 Else $6 }
-     | Confundo Jinx Incendio Cast                                  { If $2 Then $4 }
-     | WingardiumLeviosa Jinx Imperio Cast FiniteIncantatem         { While $2 Do $4 }
+Cast : Confundo Jinx Incendio Cast Aguamenti Cast                   { IfThenElse $2 $4 $6 }
+     | Confundo Jinx Incendio Cast                                  { IfThen $2 $4 }
+     | WingardiumLeviosa Jinx Imperio Cast FiniteIncantatem         { While $2 $4 }
      | Alohomora Cast Colloportus                                   { $2 }
      | Fidelius Horcrux Magic                                       { Assign $2 $3 }
      | Legilimens file                                              { ReadFile $2 }
-     | Flagrate str                                                 { Write $2 }
-     | Appare Fidelius Horcrux Magic Vestigium Cast                 { Let Assign $3 $4 In $6 }
-     | Apparate file str                                            { WriteFile $2 $3 }
+     | Flagrate int                                                 { Write $2 }
+     | Appare Fidelius Horcrux Magic Vestigium Cast                 { Let $3 $4 $6 }
+     | Apparate file int                                            { WriteFile $2 $3 }
     -- | horcrux ':' Type                                             { SetType $1 $3 }
-     | horcruxInt ':' Wizard                                        { SetType $1 $3 }
-     | horcruxArr ':' Hogwarts                                      { SetType $1 $3 }
-     | horcruxBool ':' Light                                        { SetType $1 $3 }
+     | horcruxInt ':' Wizard                                        { SetTypeInt $1 $3 }
+     | horcruxArr ':' Hogwarts                                      { SetTypeArr $1 $3 }
+     | horcruxBool ':' Light                                        { SetTypeBool $1 $3 }
 
 Horcrux : horcruxInt          { VarInt $1 }
         | horcruxArr          { VarArr $1 }
@@ -127,14 +127,14 @@ Jinx : Entomorphis Spell Spell              { Less $2 $3 }
      | CarpeRetractum Spell Spell           { LessEq $2 $3 }
      | Defodio Spell Spell                  { Greater $2 $3 }
      | Deprimo Spell Spell                  { GreaterEq $2 $3 }
-     | Caterwauling Spell Spell             { Eq $2 $3 }
-     | Impedimenta Spell Spell              { NotEq $2 $3 }
+     | Caterwauling Spell Spell             { EqInt $2 $3 }
+     | Impedimenta Spell Spell              { NotEqInt $2 $3 }
      | Crucio Jinx                          { Not $2 }
-     | Caterwauling Jinx Jinx               { Eq $2 $3 }
-     | Impedimenta Jinx Jinx                { NotEq $2 $3 }
+     | Caterwauling Jinx Jinx               { EqBool $2 $3 }
+     | Impedimenta Jinx Jinx                { NotEqBool $2 $3 }
      | '(' Jinx ')'                         { $2 }
-     | lumos                                { true }
-     | nox                                  { false }
+     | lumos                                { Lumos }
+     | nox                                  { Nox }
      | horcruxBool                          { $1 }
 
 Magic : Spell                        { $1 }
@@ -159,8 +159,8 @@ data IntExpr = Plus IntExpr IntExpr
              | Last ArrExpr
              | Double IntExpr
              | VarInt horcruxInt
-             | int
-             deriving Show
+             | Nr Int
+             deriving (Show,Eq)
 
 data ArrExpr = Sum ArrExpr
              | AddLst IntExpr ArrExpr
@@ -172,34 +172,36 @@ data ArrExpr = Sum ArrExpr
              | Revert ArrExpr
              | GetXY IntExpr IntExpr ArrExpr
              | VarArr horcruxArr
-             | arr
-             deriving Show
+             | Arr [Int]
+             deriving (Show,Eq)
 
 data BoolExpr = Less IntExpr IntExpr
               | LessEq IntExpr IntExpr
               | Greater IntExpr IntExpr
               | GreaterEq IntExpr IntExpr
-              | Eq IntExpr IntExpr
-              | NotEq IntExpr IntExpr
+              | EqInt IntExpr IntExpr
+              | NotEqInt IntExpr IntExpr
               | Not BoolExpr
-              | Eq BoolExpr BoolExpr
-              | NotEq BoolExpr BoolExpr
+              | EqBool BoolExpr BoolExpr
+              | NotEqBool BoolExpr BoolExpr
               | VarBool horcruxBool
-              | lumos
-              | nox
-              deriving Show
+              | Lumos
+              | Nox
+              deriving (Show,Eq)
 
-data Action = If BoolExpr Then Action Else Action
-            | While BoolExpr Do Action
-            | If BoolExpr Then Action
-            | Assign Var Data
+data Action = IfThenElse BoolExpr Action Action
+            | While BoolExpr Action
+            | IfThen BoolExpr Action
+            | Assign String Data
             | ReadFile String
             | Write String
-            | Let Assign Var Data In Action
+            | Let String Data Action
             | SetType Var Type
-            deriving Show
+            deriving (Show,Eq)
 
-data Data = IntExpr | ArrExpr | BoolExpr deriving Show
+data Data = IntExpr | ArrExpr | BoolExpr deriving (Show,Eq)
 
-data Type = Nr | Arr | Boo deriving Show
+data Type = NrType | ArrType | BooType deriving (Show,Eq)
+
+
 }

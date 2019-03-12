@@ -19,18 +19,18 @@ data HappyAbsSyn t4 t5 t6 t7 t8 t9
 	| HappyAbsSyn9 t9
 
 happyExpList :: Happy_Data_Array.Array Int Int
-happyExpList = Happy_Data_Array.listArray (0,261) ([0,5632,8237,7,0,4096,0,0,0,4,3072,16260,0,0,0,0,0,0,0,7,0,512,0,0,0,4,3072,16260,0,5632,8237,7,0,0,0,64,0,0,0,16384,0,4,3072,16260,0,0,0,64,0,0,0,32,0,0,0,32,0,0,0,32,0,0,4096,0,0,0,16384,0,0,0,32768,0,0,0,0,16384,0,0,64,0,0,4,3072,16260,0,0,0,0,0,0,0,0,0,0,0,0,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,3328,16269,0,4,3072,16260,48640,7,3328,16269,0,0,0,0,0,0,0,0,0,0,2,0,0,8192,0,0,0,0,0,7,65024,33271,3856,16287,0,0,0,0,0,0,0,0,0,0,0,0,0,8192,0,0,0,5632,8237,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,16384,33268,528,18,48640,7,256,9,16384,33268,528,18,16384,33268,528,18,65024,33271,3856,16287,48640,7,256,9,48640,7,256,9,48640,7,256,9,16384,33268,528,18,16384,33268,528,18,16384,33268,528,18,16384,33268,528,18,48640,7,256,9,48640,7,256,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,65024,33271,3856,16287,0,5632,8237,7,0,0,0,0,48640,7,256,9,0,4,3072,16260,48640,7,3328,16269,0,0,0,0,48640,7,256,9,0,4,3072,16260,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,0,8,0,0,0,5632,8237,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2048,0,0,48640,7,256,9,48640,7,256,9,0,0,0,0,16384,33268,528,18,16384,33268,528,18,0,0,0,0,0,0,0,0,16384,33268,528,18,16384,33268,528,18,16384,33268,528,18,0,8,0,0,0,0,0,0,0,0,0,0,16384,33268,528,18,0,0,0,0,0,0,0,0,48640,7,256,9,48640,7,256,9,48640,7,256,9,48640,7,256,9,0,16384,0,0,0,5632,8237,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16384,33268,528,18,0,5632,8237,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,260) ([0,5632,8237,7,0,2048,0,0,0,1,768,4065,0,0,0,0,0,0,28672,0,0,16,0,0,4096,0,4144,254,0,23084,3648,0,0,0,16384,0,0,0,1024,0,256,0,57603,15,0,0,2048,0,0,0,512,0,0,0,256,0,0,0,128,0,0,8192,0,0,0,16384,0,0,0,16384,0,0,0,0,2,0,0,8,0,16384,0,16576,1016,0,0,0,0,0,0,0,0,0,0,0,0,1982,0,2305,0,991,32768,1152,32768,495,16384,576,49152,247,8192,288,57344,123,53248,63696,3,32,24576,64544,63489,30,13312,65076,0,0,0,0,0,0,0,0,0,0,1,0,0,2048,0,0,0,0,57344,0,32736,2079,61681,1017,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,0,5771,912,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,63488,30,1024,36,31744,15,512,18,48640,7,256,9,57088,3,32896,4,61312,1,16448,2,34816,4158,16450,2,31712,0,36880,0,41472,33807,36880,0,53504,16903,18440,0,61436,8451,15902,127,1982,0,2305,0,991,32768,1152,32768,495,16384,576,0,16008,16912,576,0,8004,8456,288,0,4002,4228,144,0,2001,2114,72,31744,15,512,18,48640,7,256,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49136,33807,63608,508,0,46168,7296,0,0,0,0,0,1982,0,2305,0,512,0,49670,32799,495,16384,58179,15,0,0,0,57344,123,4096,144,0,32,24576,64544,63489,30,1024,36,31744,15,512,18,48640,7,256,9,57088,3,32896,4,61312,1,16448,2,0,1,0,0,0,53600,29186,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,0,0,7928,0,9220,0,3964,0,4610,0,0,0,0,0,64032,2112,2305,0,32016,33824,1152,0,0,0,0,0,0,0,0,0,4002,4228,144,0,2001,2114,72,32768,1000,1057,36,0,8,0,0,0,0,0,0,0,0,0,0,34816,4158,16450,2,0,0,0,0,0,0,0,0,7928,0,9220,0,3964,0,4610,0,1982,0,2305,0,991,32768,1152,0,0,16,0,0,49152,1442,228,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,59520,8451,9220,0,0,11542,1824,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_parseCalc","Cast","Horcrux","Spell","Charm","Jinx","Magic","Engorgio","Reducio","Inflatus","Diminuando","Geminio","Ferula","Accio","Ascendio","PrioriIncantatem","'('","')'","Depulso","Flipendo","Expelliarmus","Ventus","Obliviate","Fidelius","Appare","Vestigium","Confundo","Incendio","Aguamenti","Epoximise","Alohomora","Colloportus","Legilimens","Flagrate","EverteStatum","WingardiumLeviosa","Imperio","FiniteIncantatem","AlarteAscendere","Confringo","lumos","nox","Light","Apparate","Hogwarts","Wizard","horcruxInt","horcruxArr","horcruxBool","int","arr","':'","file","Entomorphis","CarpeRetractum","Defodio","Deprimo","Caterwauling","Crucio","Impedimenta","str","%eof"]
-        bit_start = st * 64
-        bit_end = (st + 1) * 64
+  where token_strs = ["error","%dummy","%start_parseCalc","Cast","Horcrux","Spell","Charm","Jinx","Magic","Engorgio","Reducio","Inflatus","Diminuando","Geminio","Ferula","Accio","Ascendio","PrioriIncantatem","'('","')'","Depulso","Flipendo","Expelliarmus","Ventus","Obliviate","Fidelius","Appare","Vestigium","Confundo","Incendio","Aguamenti","Epoximise","Alohomora","Colloportus","Legilimens","Flagrate","EverteStatum","WingardiumLeviosa","Imperio","FiniteIncantatem","AlarteAscendere","Confringo","lumos","nox","Light","Apparate","Hogwarts","Wizard","horcruxInt","horcruxArr","horcruxBool","int","arr","':'","file","Entomorphis","CarpeRetractum","Defodio","Deprimo","Caterwauling","Crucio","Impedimenta","%eof"]
+        bit_start = st * 63
+        bit_end = (st + 1) * 63
         read_bit = readArrayBit happyExpList
         bits = map read_bit [bit_start..bit_end - 1]
-        bits_indexed = zip bits [0..63]
+        bits_indexed = zip bits [0..62]
         token_strs_expected = concatMap f bits_indexed
         f (False, _) = []
         f (True, nr) = [token_strs !! nr]
@@ -66,7 +66,7 @@ action_2 (62) = happyShift action_30
 action_2 (8) = happyGoto action_40
 action_2 _ = happyFail (happyExpListPerState 2)
 
-action_3 (64) = happyAccept
+action_3 (63) = happyAccept
 action_3 _ = happyFail (happyExpListPerState 3)
 
 action_4 (49) = happyShift action_37
@@ -109,7 +109,7 @@ action_7 _ = happyFail (happyExpListPerState 7)
 action_8 (55) = happyShift action_32
 action_8 _ = happyFail (happyExpListPerState 8)
 
-action_9 (63) = happyShift action_31
+action_9 (52) = happyShift action_31
 action_9 _ = happyFail (happyExpListPerState 9)
 
 action_10 (19) = happyShift action_20
@@ -147,7 +147,7 @@ action_16 _ = happyFail (happyExpListPerState 16)
 action_17 (48) = happyShift action_86
 action_17 _ = happyFail (happyExpListPerState 17)
 
-action_18 (63) = happyShift action_85
+action_18 (52) = happyShift action_85
 action_18 _ = happyFail (happyExpListPerState 18)
 
 action_19 (39) = happyShift action_84
@@ -1256,7 +1256,7 @@ happyReduction_1 ((HappyAbsSyn4  happy_var_6) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (If happy_var_2 Then happy_var_4 Else happy_var_6
+		 (IfThenElse happy_var_2 happy_var_4 happy_var_6
 	) `HappyStk` happyRest
 
 happyReduce_2 = happyReduce 4 4 happyReduction_2
@@ -1266,7 +1266,7 @@ happyReduction_2 ((HappyAbsSyn4  happy_var_4) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (If happy_var_2 Then happy_var_4
+		 (IfThen happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_3 = happyReduce 5 4 happyReduction_3
@@ -1277,7 +1277,7 @@ happyReduction_3 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (While happy_var_2 Do happy_var_4
+		 (While happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_4 = happySpecReduce_3  4 happyReduction_4
@@ -1307,7 +1307,7 @@ happyReduction_6 (HappyTerminal (TokenFile _ happy_var_2))
 happyReduction_6 _ _  = notHappyAtAll 
 
 happyReduce_7 = happySpecReduce_2  4 happyReduction_7
-happyReduction_7 (HappyTerminal (TokenString _ happy_var_2))
+happyReduction_7 (HappyTerminal (TokenInt _  happy_var_2))
 	_
 	 =  HappyAbsSyn4
 		 (Write happy_var_2
@@ -1323,11 +1323,11 @@ happyReduction_8 ((HappyAbsSyn4  happy_var_6) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (Let Assign happy_var_3 happy_var_4 In happy_var_6
+		 (Let happy_var_3 happy_var_4 happy_var_6
 	) `HappyStk` happyRest
 
 happyReduce_9 = happySpecReduce_3  4 happyReduction_9
-happyReduction_9 (HappyTerminal (TokenString _ happy_var_3))
+happyReduction_9 (HappyTerminal (TokenInt _  happy_var_3))
 	(HappyTerminal (TokenFile _ happy_var_2))
 	_
 	 =  HappyAbsSyn4
@@ -1340,7 +1340,7 @@ happyReduction_10 (HappyTerminal happy_var_3)
 	_
 	(HappyTerminal (TokenVar _  happy_var_1))
 	 =  HappyAbsSyn4
-		 (SetType happy_var_1 happy_var_3
+		 (SetTypeInt happy_var_1 happy_var_3
 	)
 happyReduction_10 _ _ _  = notHappyAtAll 
 
@@ -1349,7 +1349,7 @@ happyReduction_11 (HappyTerminal happy_var_3)
 	_
 	(HappyTerminal (TokenVar _  happy_var_1))
 	 =  HappyAbsSyn4
-		 (SetType happy_var_1 happy_var_3
+		 (SetTypeArr happy_var_1 happy_var_3
 	)
 happyReduction_11 _ _ _  = notHappyAtAll 
 
@@ -1358,7 +1358,7 @@ happyReduction_12 (HappyTerminal happy_var_3)
 	_
 	(HappyTerminal (TokenVar _  happy_var_1))
 	 =  HappyAbsSyn4
-		 (SetType happy_var_1 happy_var_3
+		 (SetTypeBool happy_var_1 happy_var_3
 	)
 happyReduction_12 _ _ _  = notHappyAtAll 
 
@@ -1626,7 +1626,7 @@ happyReduction_44 (HappyAbsSyn6  happy_var_3)
 	(HappyAbsSyn6  happy_var_2)
 	_
 	 =  HappyAbsSyn8
-		 (Eq happy_var_2 happy_var_3
+		 (EqInt happy_var_2 happy_var_3
 	)
 happyReduction_44 _ _ _  = notHappyAtAll 
 
@@ -1635,7 +1635,7 @@ happyReduction_45 (HappyAbsSyn6  happy_var_3)
 	(HappyAbsSyn6  happy_var_2)
 	_
 	 =  HappyAbsSyn8
-		 (NotEq happy_var_2 happy_var_3
+		 (NotEqInt happy_var_2 happy_var_3
 	)
 happyReduction_45 _ _ _  = notHappyAtAll 
 
@@ -1652,7 +1652,7 @@ happyReduction_47 (HappyAbsSyn8  happy_var_3)
 	(HappyAbsSyn8  happy_var_2)
 	_
 	 =  HappyAbsSyn8
-		 (Eq happy_var_2 happy_var_3
+		 (EqBool happy_var_2 happy_var_3
 	)
 happyReduction_47 _ _ _  = notHappyAtAll 
 
@@ -1661,7 +1661,7 @@ happyReduction_48 (HappyAbsSyn8  happy_var_3)
 	(HappyAbsSyn8  happy_var_2)
 	_
 	 =  HappyAbsSyn8
-		 (NotEq happy_var_2 happy_var_3
+		 (NotEqBool happy_var_2 happy_var_3
 	)
 happyReduction_48 _ _ _  = notHappyAtAll 
 
@@ -1677,13 +1677,13 @@ happyReduction_49 _ _ _  = notHappyAtAll
 happyReduce_50 = happySpecReduce_1  8 happyReduction_50
 happyReduction_50 _
 	 =  HappyAbsSyn8
-		 (true
+		 (Lumos
 	)
 
 happyReduce_51 = happySpecReduce_1  8 happyReduction_51
 happyReduction_51 _
 	 =  HappyAbsSyn8
-		 (false
+		 (Nox
 	)
 
 happyReduce_52 = happySpecReduce_1  8 happyReduction_52
@@ -1715,7 +1715,7 @@ happyReduction_55 (HappyAbsSyn7  happy_var_1)
 happyReduction_55 _  = notHappyAtAll 
 
 happyNewToken action sts stk [] =
-	action 64 64 notHappyAtAll (HappyState action) sts stk []
+	action 63 63 notHappyAtAll (HappyState action) sts stk []
 
 happyNewToken action sts stk (tk:tks) =
 	let cont i = action i i tk (HappyState action) sts stk tks in
@@ -1773,11 +1773,10 @@ happyNewToken action sts stk (tk:tks) =
 	TokenEqEq _ -> cont 60;
 	TokenNot _ -> cont 61;
 	TokenNotEq _ -> cont 62;
-	TokenString _ happy_dollar_dollar -> cont 63;
 	_ -> happyError' ((tk:tks), [])
 	}
 
-happyError_ explist 64 tk tks = happyError' (tks, explist)
+happyError_ explist 63 tk tks = happyError' (tks, explist)
 happyError_ explist _ tk tks = happyError' ((tk:tks), explist)
 
 newtype HappyIdentity a = HappyIdentity a
@@ -1822,8 +1821,8 @@ data IntExpr = Plus IntExpr IntExpr
              | Last ArrExpr
              | Double IntExpr
              | VarInt horcruxInt
-             | int
-             deriving Show
+             | Nr Int
+             deriving (Show,Eq)
 
 data ArrExpr = Sum ArrExpr
              | AddLst IntExpr ArrExpr
@@ -1835,36 +1834,36 @@ data ArrExpr = Sum ArrExpr
              | Revert ArrExpr
              | GetXY IntExpr IntExpr ArrExpr
              | VarArr horcruxArr
-             | arr
-             deriving Show
+             | Arr [Int]
+             deriving (Show,Eq)
 
 data BoolExpr = Less IntExpr IntExpr
               | LessEq IntExpr IntExpr
               | Greater IntExpr IntExpr
               | GreaterEq IntExpr IntExpr
-              | Eq IntExpr IntExpr
-              | NotEq IntExpr IntExpr
+              | EqInt IntExpr IntExpr
+              | NotEqInt IntExpr IntExpr
               | Not BoolExpr
-              | Eq BoolExpr BoolExpr
-              | NotEq BoolExpr BoolExpr
+              | EqBool BoolExpr BoolExpr
+              | NotEqBool BoolExpr BoolExpr
               | VarBool horcruxBool
-              | lumos
-              | nox
-              deriving Show
+              | Lumos
+              | Nox
+              deriving (Show,Eq)
 
-data Action = If BoolExpr Then Action Else Action
-            | While BoolExpr Do Action
-            | If BoolExpr Then Action
+data Action = IfThenElse BoolExpr Action Action
+            | While BoolExpr Action
+            | IfThen BoolExpr Action
             | Assign Var Data
             | ReadFile String
             | Write String
-            | Let Assign Var Data In Action
+            | Let Horcrux Data Action
             | SetType Var Type
-            deriving Show
+            deriving (Show,Eq)
 
-data Data = IntExpr | ArrExpr | BoolExpr deriving Show
+data Data = IntExpr | ArrExpr | BoolExpr deriving (Show,Eq)
 
-data Type = Nr | Arr | Boo deriving Show
+data Type = NrType | ArrType | BooType deriving (Show,Eq)
 {-# LINE 1 "templates\GenericTemplate.hs" #-}
 {-# LINE 1 "templates\\\\GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
