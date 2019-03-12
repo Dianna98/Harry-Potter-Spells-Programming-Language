@@ -1810,7 +1810,7 @@ happySeq = happyDontSeq
 
 
 parseError :: [Token] -> a
-parseError _ = error "Morsmordre! There is a parsing error!"
+parseError x = error "Morsmordre! There is a parsing error on "++((tokenPosn x):"")++" !"
 
 data IntExpr = Plus IntExpr IntExpr
              | Minus IntExpr IntExpr
