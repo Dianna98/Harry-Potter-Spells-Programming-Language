@@ -15,7 +15,7 @@ $white+       ;
   Reducio                            { tok (\p s -> TokenMinus p) }
   Inflatus                           { tok (\p s -> TokenTimes p) }
   Diminuando                         { tok (\p s -> TokenDiv p) }
-  Geminio                            { tok (\p s -> TokenDuplicate p) }
+  Geminio                            { tok (\p s -> TokenDouble p) }
   Ferula                             { tok (\p s -> TokenSum p) }
   Accio                              { tok (\p s -> TokenGet p) }
   Ascendio                           { tok (\p s -> TokenHead p) }
@@ -63,6 +63,7 @@ $white+       ;
   Caterwauling                       { tok (\p s -> TokenEqEq p)}
   Crucio                             { tok (\p s -> TokenNot p)}
   Impedimenta                        { tok (\p s -> TokenNotEq p)}
+  [$alpha $digit \. \, \! \; \: \- \\ \+ \= \< \> \_ \?]* {tok (\p s -> TokenString p s)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -76,7 +77,7 @@ data SpellBookToken =
   TokenMinus  AlexPosn       	|
   TokenTimes AlexPosn       	|
   TokenDiv AlexPosn         	|
-  TokenDuplicate AlexPosn     |
+  TokenDouble AlexPosn     |
   TokenSum AlexPosn           |
   TokenGet AlexPosn         	|
   TokenHead AlexPosn         	|
@@ -131,7 +132,7 @@ tokenPosn (TokenPlus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenMinus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTimes (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenDiv (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenDuplicate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenDouble (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenSum (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenHead (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -179,7 +180,6 @@ tokenPosn (TokenLessEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreaterEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-
-
+tokenPosn (TokenString (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 
 }
