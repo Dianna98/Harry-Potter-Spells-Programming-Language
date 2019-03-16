@@ -13,9 +13,8 @@ $white+       ;
   Illegibilus        ;
   Engorgio                           { tok (\p s -> TokenPlus p)}
   Reducio                            { tok (\p s -> TokenMinus p) }
-  Inflatus                           { tok (\p s -> TokenTimes p) }
+  Geminio                            { tok (\p s -> TokenTimes p) }
   Diminuando                         { tok (\p s -> TokenDiv p) }
-  Geminio                            { tok (\p s -> TokenDouble p) }
   Ferula                             { tok (\p s -> TokenSum p) }
   Accio                              { tok (\p s -> TokenGet p) }
   Ascendio                           { tok (\p s -> TokenHead p) }
@@ -52,7 +51,7 @@ $white+       ;
   Confringo                          { tok (\p s -> TokenGetXY p)}
   $alpha [$alpha $digit \_ \`]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
-  \[ [$digit \,]* \]                 { tok (\p s -> TokenArr p s) }
+ -- \[ [$digit \,]* \]                 { tok (\p s -> TokenArr p s) }
   \:                                 { tok (\p s -> TokenOfType p) }
   --\;                                 { tok (\p s -> TokenEndStatement p)}
   $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
@@ -63,7 +62,7 @@ $white+       ;
   Caterwauling                       { tok (\p s -> TokenEqEq p)}
   Crucio                             { tok (\p s -> TokenNot p)}
   Impedimenta                        { tok (\p s -> TokenNotEq p)}
---  [$alpha $digit \. \, \! \; \: \- \\ \+ \= \< \> \_ \?]* {tok (\p s -> TokenString p s)}
+  \n                                 { tok (\p s -> TokenNewLine p)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -76,39 +75,39 @@ data SpellBookToken =
   TokenPlus AlexPosn          |
   TokenMinus AlexPosn         |
   TokenTimes AlexPosn         |
-  TokenDiv AlexPosn         	|
+  TokenDiv AlexPosn              |
   TokenDouble AlexPosn        |
   TokenSum AlexPosn           |
-  TokenGet AlexPosn         	|
-  TokenHead AlexPosn         	|
-  TokenLast AlexPosn         	|
+  TokenGet AlexPosn              |
+  TokenHead AlexPosn              |
+  TokenLast AlexPosn              |
   TokenLParen AlexPosn        |
   TokenRParen AlexPosn        |
-  TokenAddEnd AlexPosn       	|
+  TokenAddEnd AlexPosn            |
   TokenAddFront AlexPosn      |
-  TokenRemove AlexPosn       	|
-  TokenInit AlexPosn        	|
-  TokenTail AlexPosn        	|
-  TokenEq AlexPosn           	|
-  TokenLet AlexPosn         	|
-  TokenIn AlexPosn          	|
-  TokenIf AlexPosn           	|
-  TokenThen AlexPosn        	|
-  TokenElse AlexPosn        	|
-  TokenConcat AlexPosn       	|
-  TokenWhile AlexPosn        	|
-  TokenDo AlexPosn          	|
-  TokenEndWhile AlexPosn     	|
-  TokenRead AlexPosn        	|
-  TokenWrite AlexPosn        	|
-  TokenRevert AlexPosn       	|
-  TokenBegin AlexPosn        	|
-  TokenEnd AlexPosn        	  |
-  TokenPower AlexPosn       	|
-  TokenArrType AlexPosn      	|
-  TokenIntType AlexPosn      	|
-  TokenInt AlexPosn Int      	|
-  TokenArr AlexPosn String    |
+  TokenRemove AlexPosn            |
+  TokenInit AlexPosn             |
+  TokenTail AlexPosn             |
+  TokenEq AlexPosn                |
+  TokenLet AlexPosn              |
+  TokenIn AlexPosn               |
+  TokenIf AlexPosn                |
+  TokenThen AlexPosn             |
+  TokenElse AlexPosn             |
+  TokenConcat AlexPosn            |
+  TokenWhile AlexPosn             |
+  TokenDo AlexPosn               |
+  TokenEndWhile AlexPosn          |
+  TokenRead AlexPosn             |
+  TokenWrite AlexPosn             |
+  TokenRevert AlexPosn            |
+  TokenBegin AlexPosn             |
+  TokenEnd AlexPosn               |
+  TokenPower AlexPosn            |
+--  TokenArrType AlexPosn           |
+--  TokenIntType AlexPosn           |
+  TokenInt AlexPosn Int           |
+ -- TokenArr AlexPosn String    |
   TokenVar AlexPosn String    |
   TokenOfType AlexPosn        |
   TokenWriteFile AlexPosn     |
@@ -124,6 +123,7 @@ data SpellBookToken =
   TokenGreaterEq AlexPosn     |
   TokenEqEq AlexPosn          |
   TokenNotEq AlexPosn         |
+  TokenNewLine AlexPosn       |
 --  TokenString AlexPosn String |
   TokenFile AlexPosn String
   deriving (Eq,Show)
@@ -182,5 +182,7 @@ tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 --tokenPosn (TokenString (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreaterEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenNewLine (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+
 
 }

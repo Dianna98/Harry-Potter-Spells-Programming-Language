@@ -9,9 +9,8 @@ import SpellBookTokens
 %token
   Engorgio                           {TokenPlus _ }
   Reducio                            {TokenMinus _ }
-  Inflatus                           {TokenTimes _ }
+  Geminio                            {TokenTimes _ }
   Diminuando                         {TokenDiv _ }
-  Geminio                            {TokenDouble _ }
   Ferula                             {TokenSum _ }
   Accio                              {TokenGet _ }
   Ascendio                           {TokenHead _ }
@@ -46,7 +45,6 @@ import SpellBookTokens
   Apparate                           {TokenWriteFile _ }
   Hogwarts                           {TokenArrType _ }
   Wizard                             {TokenIntType _ }
---  horcrux                            {TokenVar _  $$ }
   horcruxInt                         {TokenVar _  $$ }
   horcruxArr                         {TokenVar _  $$ }
   horcruxBool                        {TokenVar _  $$ }
@@ -61,7 +59,7 @@ import SpellBookTokens
   Caterwauling                       {TokenEqEq _ }
   Crucio                             {TokenNot _ }
   Impedimenta                        {TokenNotEq _ }
---  str                                {TokenString _ $$ }
+  newLine                            {TokenNewLine _ }
 
 %right Appare
 %right Vestigium
@@ -79,129 +77,61 @@ import SpellBookTokens
 %left Flagrate Apparate
 %left WingardiumLeviosa Imperio
 %%
-Cast : Confundo Jinx Incendio Cast Aguamenti Cast                   { IfThenElse $2 $4 $6 }
-     | Confundo Jinx Incendio Cast                                  { IfThen $2 $4 }
-     | WingardiumLeviosa Jinx Imperio Cast FiniteIncantatem         { While $2 $4 }
-     | Alohomora Cast Colloportus                                   { $2 }
-     | Fidelius Horcrux Magic                                       { Assign $2 $3 }
-     | Legilimens file                                              { ReadFile $2 }
-     | Flagrate int                                                 { Write $2 }
-     | Appare Fidelius Horcrux Magic Vestigium Cast                 { Let $3 $4 $6 }
-     | Apparate file int                                            { WriteFile $2 $3 }
-    -- | horcrux ':' Type                                             { SetType $1 $3 }
-     | horcruxInt ':' Wizard                                        { SetTypeInt $1 $3 }
-     | horcruxArr ':' Hogwarts                                      { SetTypeArr $1 $3 }
-     | horcruxBool ':' Light                                        { SetTypeBool $1 $3 }
+Act :  Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
+     | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
+     | WingardiumLeviosa Expr Imperio Body FiniteIncantatem            { While $2 $4 }
+     | Appare Fidelius horcrux Expr Vestigium Body                     { Let $3 $4 $6 }
+     | Flagrate Expr                                                   { Write $2 }
 
-Horcrux : horcruxInt          { VarInt $1 }
-        | horcruxArr          { VarArr $1 }
-        | horcruxBool         { VarBool $1}
+Expr : Engorgio Expr Expr                                              { Plus $2 $3 }
+     | Reducio Expr Expr                                               { Minus $2 $3 }
+     | Geminio Expr Expr                                               { Times $2 $3 }
+     | Diminuando Expr Expr                                            { Div $2 $3 }
+     | AlarteAscendere Expr Expr                                       { Power $2 $3 }
+     | Accio Expr Expr                                                 { Get $2 $3 }
+     | Ascendio Expr                                                   { Head $2 }
+     | PrioriIncantatem Expr                                           { Last $2 }
+     | Ferula Expr                                                     { Sum $2 }
+     | Depulso Expr Expr                                               { AddLst $2 $3 }
+     | Flipendo Expr Expr                                              { AddFst $2 $3 }
+     | Expelliarmus Expr Expr                                          { Remove $2 $3 }
+     | Ventus Expr                                                     { Init $2 }
+     | Obliviate Expr                                                  { Tail $2 }
+     | Epoximise Expr Expr                                             { Concat $2 $3 }
+     | EverteStatum Expr                                               { Revert $2 }
+     | Confringo Expr Expr Expr                                        { GetXY $2 $3 $4 }
+     | Entomorphis Expr Expr                                           { Less $2 $3 }
+     | CarpeRetractum Expr Expr                                        { LessEq $2 $3 }
+     | Defodio Expr Expr                                               { Greater $2 $3 }
+     | Deprimo Expr Expr                                               { GreaterEq $2 $3 }
+     | Caterwauling Expr Expr                                          { Eq $2 $3 }
+     | Impedimenta Expr Expr                                           { NotEq $2 $3 }
+     | '(' Expr ')'                                                    { Br $2 }
+     | horcruxInt                                                      { VarInt $1 }
+     | horcruxArr                                                      { VarArr $1 }
+     | horcruxBool                                                     { VarBool $1 }
+     | int                                                             { Int $1 }
+     | lumos                                                           { true }
+     | nox                                                             { false }
+     | Arr                                                             { Arr $1 }
 
-Spell : Engorgio Spell Spell                { Plus $2 $3 }
-      | Reducio Spell Spell                 { Minus $2 $3 }
-      | Inflatus Spell Spell                { Times $2 $3 }
-      | Diminuando Spell Spell              { Div $2 $3 }
-      | AlarteAscendere Spell Spell         { Power $2 $3 }
-      | Accio Spell Charm                   { GetI $2 $3 }
-      | Ascendio Charm                      { Head $2 }
-      | PrioriIncantatem Charm              { Last $2 }
-      | Geminio Spell                       { Double $2}
-      | '(' Spell ')'                       { $2 }
-      | int                                 { Nr $1 }
-      | horcruxInt                          { $1 }
+Body : Alohomora Body Colloportus                                      { Body $2 }
+     | Expr newLine Expr                                               { Multy $1 $3 }
+     | Expr                                                            { Single $1 }
 
-Charm : Ferula Charm                        { Sum $2 }
-      | Depulso Spell Charm                 { AddLst $2 $3 }
-      | Flipendo Spell Charm                { AddFst $2 $3 }
-      | Expelliarmus Spell Charm            { Remove $2 $3 }
-      | Ventus Charm                        { Init $2 }
-      | Obliviate Charm                     { Tail $2 }
-      | Epoximise Charm Charm               { Concat $2 $3 }
-      | EverteStatum Charm                  { Revert $2 }
-      | Confringo Spell Spell Charm         { GetXY $2 $3 $4 }
-      | '(' Charm ')'                       { $2 }
-      | arr                                 { Arr $1 }
-      | horcruxArr                          { $1 }
-
-Jinx : Entomorphis Spell Spell              { Less $2 $3 }
-     | CarpeRetractum Spell Spell           { LessEq $2 $3 }
-     | Defodio Spell Spell                  { Greater $2 $3 }
-     | Deprimo Spell Spell                  { GreaterEq $2 $3 }
-     | Caterwauling Spell Spell             { EqInt $2 $3 }
-     | Impedimenta Spell Spell              { NotEqInt $2 $3 }
-     | Crucio Jinx                          { Not $2 }
-     | Caterwauling Jinx Jinx               { EqBool $2 $3 }
-     | Impedimenta Jinx Jinx                { NotEqBool $2 $3 }
-     | '(' Jinx ')'                         { $2 }
-     | lumos                                { Lumos }
-     | nox                                  { Nox }
-     | horcruxBool                          { $1 }
-
-Magic : Spell                        { $1 }
-      | Jinx                         { $1 }
-      | Charm                        { $1 }
-
--- Type : Hogwarts       {Arr}
---      | Wizard         {Nr}
---      | Light          {Boo}
+Arr :  { - empty - }                          { [] }
+     | '-' Int                                { [-$2] }
+     | Int                                    { $1 }
+     | Arr ',' Int                            { $3 : $1 }
+     | Arr ',' '-' Int                        { (-$4) : $1 }
 
 {
 parseError :: [Token] -> a
-parseError x = error "Morsmordre! There is a parsing error on "++((tokenPosn x):"")++" !"
+parseError [] = error "Morsmordre!"
+parseError (x:xs) = error "Morsmordre! There is a parsing error on "++((tokenPosn x):"")++" !\n" ++ parseError xs
 
-data IntExpr = Plus IntExpr IntExpr
-             | Minus IntExpr IntExpr
-             | Times IntExpr IntExpr
-             | Div IntExpr IntExpr
-             | Power IntExpr IntExpr
-             | GetI IntExpr ArrExpr
-             | Head ArrExpr
-             | Last ArrExpr
-             | Double IntExpr
-             | VarInt horcruxInt
-             | Nr Int
-             deriving (Show,Eq)
+data Expr = 
 
-data ArrExpr = Sum ArrExpr
-             | AddLst IntExpr ArrExpr
-             | AddFst IntExpr ArrExpr
-             | Remove IntExpr ArrExpr
-             | Init ArrExpr
-             | Tail ArrExpr
-             | Concat ArrExpr ArrExpr
-             | Revert ArrExpr
-             | GetXY IntExpr IntExpr ArrExpr
-             | VarArr horcruxArr
-             | Arr [Int]
-             deriving (Show,Eq)
-
-data BoolExpr = Less IntExpr IntExpr
-              | LessEq IntExpr IntExpr
-              | Greater IntExpr IntExpr
-              | GreaterEq IntExpr IntExpr
-              | EqInt IntExpr IntExpr
-              | NotEqInt IntExpr IntExpr
-              | Not BoolExpr
-              | EqBool BoolExpr BoolExpr
-              | NotEqBool BoolExpr BoolExpr
-              | VarBool horcruxBool
-              | Lumos
-              | Nox
-              deriving (Show,Eq)
-
-data Action = IfThenElse BoolExpr Action Action
-            | While BoolExpr Action
-            | IfThen BoolExpr Action
-            | Assign String Data
-            | ReadFile String
-            | Write String
-            | Let String Data Action
-            | SetType Var Type
-            deriving (Show,Eq)
-
-data Data = IntExpr | ArrExpr | BoolExpr deriving (Show,Eq)
-
-data Type = NrType | ArrType | BooType deriving (Show,Eq)
 
 
 }

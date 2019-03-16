@@ -1854,10 +1854,10 @@ data BoolExpr = Less IntExpr IntExpr
 data Action = IfThenElse BoolExpr Action Action
             | While BoolExpr Action
             | IfThen BoolExpr Action
-            | Assign Var Data
+            | Assign String Data
             | ReadFile String
             | Write String
-            | Let Horcrux Data Action
+            | Let String Data Action
             | SetType Var Type
             deriving (Show,Eq)
 
