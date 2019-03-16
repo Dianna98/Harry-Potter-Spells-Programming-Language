@@ -77,12 +77,6 @@ import SpellBookTokens
 %left Flagrate Apparate
 %left WingardiumLeviosa Imperio
 %%
-Act :  Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
-     | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
-     | WingardiumLeviosa Expr Imperio Body FiniteIncantatem            { While $2 $4 }
-     | Appare Fidelius horcrux Expr Vestigium Body                     { Let $3 $4 $6 }
-     | Flagrate Expr                                                   { Write $2 }
-
 Expr : Engorgio Expr Expr                                              { Plus $2 $3 }
      | Reducio Expr Expr                                               { Minus $2 $3 }
      | Geminio Expr Expr                                               { Times $2 $3 }
@@ -106,17 +100,25 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Deprimo Expr Expr                                               { GreaterEq $2 $3 }
      | Caterwauling Expr Expr                                          { Eq $2 $3 }
      | Impedimenta Expr Expr                                           { NotEq $2 $3 }
+     | Crucio Expr                                                     { Not $2 }
      | '(' Expr ')'                                                    { Br $2 }
-     | horcruxInt                                                      { VarInt $1 }
-     | horcruxArr                                                      { VarArr $1 }
-     | horcruxBool                                                     { VarBool $1 }
-     | int                                                             { Int $1 }
+     | int                                                             { Nr $1 }
      | lumos                                                           { true }
      | nox                                                             { false }
      | Arr                                                             { Arr $1 }
+     | Var                                                             { $1 }
+     | Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
+     | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
+     | WingardiumLeviosa Expr Imperio Body FiniteIncantatem            { While $2 $4 }
+     | Appare Fidelius Var Expr Vestigium Body                         { Let $3 $4 $6 }
+     | Flagrate Expr                                                   { Write $2 }
 
-Body : Alohomora Body Colloportus                                      { Body $2 }
-     | Expr newLine Expr                                               { Multy $1 $3 }
+Var :  horcruxInt                                                      { VarInt $1 }
+     | horcruxArr                                                      { VarArr $1 }
+     | horcruxBool                                                     { VarBool $1 }
+
+Body : Alohomora Body Colloportus                                      { BeginEnd $2 }
+     | Expr newLine Body                                               { Multy $1 $3 }
      | Expr                                                            { Single $1 }
 
 Arr :  { - empty - }                          { [] }
@@ -130,7 +132,51 @@ parseError :: [Token] -> a
 parseError [] = error "Morsmordre!"
 parseError (x:xs) = error "Morsmordre! There is a parsing error on "++((tokenPosn x):"")++" !\n" ++ parseError xs
 
-data Expr = 
+data Environment = [(String, Expr)]
+
+data Expr = Plus Expr Expr
+          | Minus Expr Expr
+          | Times Expr Expr
+          | Div Expr Expr
+          | Power Expr Expr
+          | Get Expr Expr
+          | Head Expr
+          | Last Expr
+          | Sum Expr
+          | AddLst Expr Expr
+          | AddFst Expr Expr
+          | Remove Expr Expr
+          | Init Expr
+          | Tail Expr
+          | Concat Expr Expr
+          | GetXY Expr Expr Expr
+          | Less Expr Expr
+          | LessEq Expr Expr
+          | Greater Expr Expr
+          | GreaterEq Expr Expr
+          | Eq Expr Expr
+          | NotEq Expr Expr
+          | Not Expr
+          | Br Expr
+          | Nr Int
+          | Arr [Int]
+          | Var
+          | IfThenElse Expr Body Body
+          | IfThen Expr Body
+          | While Expr Body
+          | Let Var Expr Body
+          | Flagrate Expr
+          deriving (Show,Eq)
+
+data Var = VarInt String
+         | VarArr String
+         | VarBool String
+         deriving (Show,Eq)
+
+data Body = BeginEnd Body
+          | Multy Expr Body
+          | Single Expr
+          deriving (Show,Eq)
 
 
 
