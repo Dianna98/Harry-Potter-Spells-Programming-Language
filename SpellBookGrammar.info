@@ -13,9 +13,9 @@ Grammar
 	Cast -> Alohomora Cast Colloportus                 (4)
 	Cast -> Fidelius Horcrux Magic                     (5)
 	Cast -> Legilimens file                            (6)
-	Cast -> Flagrate str                               (7)
+	Cast -> Flagrate int                               (7)
 	Cast -> Appare Fidelius Horcrux Magic Vestigium Cast   (8)
-	Cast -> Apparate file str                          (9)
+	Cast -> Apparate file int                          (9)
 	Cast -> horcruxInt ':' Wizard                      (10)
 	Cast -> horcruxArr ':' Hogwarts                    (11)
 	Cast -> horcruxBool ':' Light                      (12)
@@ -119,7 +119,6 @@ Terminals
 	Caterwauling   { TokenEqEq _ }
 	Crucio         { TokenNot _ }
 	Impedimenta    { TokenNotEq _ }
-	str            { TokenString _ $$ }
 
 -----------------------------------------------------------------------------
 Non-terminals
@@ -246,9 +245,9 @@ State 8
 
 State 9
 
-	Cast -> Flagrate . str                              (rule 7)
+	Cast -> Flagrate . int                              (rule 7)
 
-	str            shift, and enter state 31
+	int            shift, and enter state 31
 
 
 State 10
@@ -271,7 +270,7 @@ State 10
 
 State 11
 
-	Cast -> Apparate . file str                         (rule 9)
+	Cast -> Apparate . file int                         (rule 9)
 
 	file           shift, and enter state 18
 
@@ -320,9 +319,9 @@ State 17
 
 State 18
 
-	Cast -> Apparate file . str                         (rule 9)
+	Cast -> Apparate file . int                         (rule 9)
 
-	str            shift, and enter state 85
+	int            shift, and enter state 85
 
 
 State 19
@@ -583,7 +582,7 @@ State 30
 
 State 31
 
-	Cast -> Flagrate str .                              (rule 7)
+	Cast -> Flagrate int .                              (rule 7)
 
 	Aguamenti      reduce using rule 7
 	Colloportus    reduce using rule 7
@@ -1752,7 +1751,7 @@ State 84
 
 State 85
 
-	Cast -> Apparate file str .                         (rule 9)
+	Cast -> Apparate file int .                         (rule 9)
 
 	Aguamenti      reduce using rule 9
 	Colloportus    reduce using rule 9
@@ -3318,6 +3317,6 @@ State 141
 Grammar Totals
 -----------------------------------------------------------------------------
 Number of rules: 56
-Number of terminals: 54
+Number of terminals: 53
 Number of non-terminals: 7
 Number of states: 142
