@@ -4,7 +4,7 @@ import SpellBookTokens
 }
 
 %name parseCalc
-%tokentype { Token }
+%tokentype { SpellBookToken }
 %error { parseError }
 %token
   Engorgio                           {TokenPlus _ }
@@ -41,17 +41,17 @@ import SpellBookTokens
   Confringo                          {TokenGetXY _ }
   lumos                              {TokenTrue _ }
   nox                                {TokenFalse _ }
-  Light                              {TokenBool _ }
+ -- Light                              {TokenBool _ }
   Apparate                           {TokenWriteFile _ }
-  Hogwarts                           {TokenArrType _ }
-  Wizard                             {TokenIntType _ }
+--  Hogwarts                           {TokenArrType _ }
+--  Wizard                             {TokenIntType _ }
   horcruxInt                         {TokenVar _  $$ }
   horcruxArr                         {TokenVar _  $$ }
   horcruxBool                        {TokenVar _  $$ }
   int                                {TokenInt _  $$ }
-  arr                                {TokenArr _ $$ }
-  ':'                                {TokenOfType _ }
-  file                               {TokenFile _ $$ }
+ -- arr                                {TokenArr _ $$ }
+ -- ':'                                {TokenOfType _ }
+ -- file                               {TokenFile _ $$ }
   Entomorphis                        {TokenLess _ }
   CarpeRetractum                     {TokenLessEq _ }
   Defodio                            {TokenGreater _ }
@@ -60,22 +60,27 @@ import SpellBookTokens
   Crucio                             {TokenNot _ }
   Impedimenta                        {TokenNotEq _ }
   newLine                            {TokenNewLine _ }
+  '-'                                {TokenDash _ }
+  ','                                {TokenComma _ }
+--  space                              {TokenSpace _ }
+--  newLn                              {TokenNewLn _ }
 
 %right Appare
 %right Vestigium
 %right Fidelius
-%nonassoc int horcrux arr '(' ')' lumos nox
+%nonassoc int horcruxInt horcruxArr horcruxBool arr '(' ')' lumos nox Alohomora Colloportus
 %nonassoc Entomorphis CarpeRetractum Defodio Deprimo Caterwauling Impedimenta
 %nonassoc Legilimens Confringo Incendio Aguamenti
 %left Depulso Flipendo Ventus Obliviate Expelliarmus EverteStatum Confringo
 %left Epoximise
 %left Engorgio Reducio
-%left Inflatus Diminuando Geminio
+%left Diminuando Geminio
 %left AlarteAscendere
 %left Accio Ascendio PrioriIncantatem Ferula
 %left Crucio
-%left Flagrate Apparate
+%left Flagrate
 %left WingardiumLeviosa Imperio
+%left newLine
 %%
 Expr : Engorgio Expr Expr                                              { Plus $2 $3 }
      | Reducio Expr Expr                                               { Minus $2 $3 }
@@ -103,36 +108,37 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Crucio Expr                                                     { Not $2 }
      | '(' Expr ')'                                                    { Br $2 }
      | int                                                             { Nr $1 }
-     | lumos                                                           { true }
-     | nox                                                             { false }
-     | Arr                                                             { Arr $1 }
+     | lumos                                                           { True }
+     | nox                                                             { False }
+     --| Arr                                                             { Arr $1 }
      | Var                                                             { $1 }
      | Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
      | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
      | WingardiumLeviosa Expr Imperio Body FiniteIncantatem            { While $2 $4 }
      | Appare Fidelius Var Expr Vestigium Body                         { Let $3 $4 $6 }
+     | Fidelius Var Expr                                               { Assign $2 $3 }
      | Flagrate Expr                                                   { Write $2 }
 
 Var :  horcruxInt                                                      { VarInt $1 }
      | horcruxArr                                                      { VarArr $1 }
      | horcruxBool                                                     { VarBool $1 }
 
-Body : Alohomora Body Colloportus                                      { BeginEnd $2 }
-     | Expr newLine Body                                               { Multy $1 $3 }
-     | Expr                                                            { Single $1 }
+Body : Alohomora Body                                                  { Begin $2 }
+     | Expr newLine Body                                               { Multi $1 $3 }
+     | Expr Colloportus                                                { Single $1 }
 
-Arr :  { - empty - }                          { [] }
-     | '-' Int                                { [-$2] }
-     | Int                                    { $1 }
-     | Arr ',' Int                            { $3 : $1 }
-     | Arr ',' '-' Int                        { (-$4) : $1 }
+-- Arr :  {- empty -}                            { [] }
+--      | '-' int                                { [-$2] }
+--      | int                                    { [$1] }
+--      | Arr ',' int                            { $3 : $1 }
+--      | Arr ',' '-' int                        { (-$4) : $1 }
 
 {
-parseError :: [Token] -> a
-parseError [] = error "Morsmordre!"
-parseError (x:xs) = error "Morsmordre! There is a parsing error on "++((tokenPosn x):"")++" !\n" ++ parseError xs
+parseError :: [SpellBookToken] -> a
+parseError [] = error "Morsmordre! There is a parsing error!"
+parseError (x:xs) = error ("Morsmordre! There is a parsing error on "++((tokenPosn x))++" !")
 
-data Environment = [(String, Expr)]
+type Environment = [(String, Expr)]
 
 data Expr = Plus Expr Expr
           | Minus Expr Expr
@@ -149,6 +155,7 @@ data Expr = Plus Expr Expr
           | Init Expr
           | Tail Expr
           | Concat Expr Expr
+          | Revert Expr
           | GetXY Expr Expr Expr
           | Less Expr Expr
           | LessEq Expr Expr
@@ -159,22 +166,66 @@ data Expr = Plus Expr Expr
           | Not Expr
           | Br Expr
           | Nr Int
-          | Arr [Int]
           | Var
+          | Bool
           | IfThenElse Expr Body Body
           | IfThen Expr Body
           | While Expr Body
           | Let Var Expr Body
-          | Flagrate Expr
+          | Assign Var Expr
+          | Write Expr
           deriving (Show,Eq)
+
+
+-- data IntExpr = Plus IntExpr IntExpr
+--           | Minus IntExpr IntExpr
+--           | Times IntExpr IntExpr
+--           | Div IntExpr IntExpr
+--           | Power IntExpr IntExpr
+--           | Get IntExpr ArrExpr
+--           | Head ArrExpr
+--           | Last ArrExpr
+--           | Nr Int
+--           | Br IntExpr
+--           deriving (Show,Eq)
+--
+-- data ArrExpr = Sum ArrExpr
+--           | AddLst IntExpr ArrExpr
+--           | AddFst IntExpr ArrExpr
+--           | Remove IntExpr ArrExpr
+--           | Init ArrExpr
+--           | Tail ArrExpr
+--           | Concat ArrExpr ArrExpr
+--           | Revert ArrExpr
+--           | GetXY IntExpr IntExpr ArrExpr
+--           deriving (Show,Eq)
+--
+-- data BoolExpr = Less IntExpr IntExpr
+--           | LessEq IntExpr IntExpr
+--           | Greater IntExpr IntExpr
+--           | GreaterEq IntExpr IntExpr
+--           | Eq IntExpr IntExpr
+--           | NotEq IntExpr IntExpr
+--           | Not BoolExpr
+--           deriving (Show,Eq)
+--
+-- data Expr = IntExpr | ArrExpr | BoolExpr | Var deriving (Show,Eq)
+--
+-- data Act =  IfThenElse BoolExpr Body Body
+--           | IfThen BoolExpr Body
+--           | While BoolExpr Body
+--           | Let Var Expr Body
+--           | Assign Var Expr
+--           | Write Expr
+--           deriving (Show,Eq)
 
 data Var = VarInt String
          | VarArr String
          | VarBool String
          deriving (Show,Eq)
 
-data Body = BeginEnd Body
-          | Multy Expr Body
+data Body = Begin Body
+          | Multi Expr Body
           | Single Expr
           deriving (Show,Eq)
 

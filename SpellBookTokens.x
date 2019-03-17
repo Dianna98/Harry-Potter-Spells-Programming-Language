@@ -45,16 +45,16 @@ $white+       ;
   Imperio                            { tok (\p s -> TokenDo p)}
   FiniteIncantatem                   { tok (\p s -> TokenEndWhile p) }
   AlarteAscendere                    { tok (\p s -> TokenPower p) }
-  Hogwarts                           { tok (\p s -> TokenArrType p) }
-  Wizard                             { tok (\p s -> TokenIntType p) }
-  Light                              { tok (\p s -> TokenBool p)}
+--  Hogwarts                           { tok (\p s -> TokenArrType p) }
+ -- Wizard                             { tok (\p s -> TokenIntType p) }
+ -- Light                              { tok (\p s -> TokenBool p)}
   Confringo                          { tok (\p s -> TokenGetXY p)}
   $alpha [$alpha $digit \_ \`]*      { tok (\p s -> TokenVar p s) }
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
  -- \[ [$digit \,]* \]                 { tok (\p s -> TokenArr p s) }
-  \:                                 { tok (\p s -> TokenOfType p) }
+ -- \:                                 { tok (\p s -> TokenOfType p) }
   --\;                                 { tok (\p s -> TokenEndStatement p)}
-  $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
+ -- $alpha [$alpha $digit \_] * \.txt  { tok (\p s -> TokenFile p s)}
   Entomorphis                        { tok (\p s -> TokenLess p)}
   CarpeRetractum                     { tok (\p s -> TokenLessEq p)}
   Defodio                            { tok (\p s -> TokenGreater p)}
@@ -63,6 +63,10 @@ $white+       ;
   Crucio                             { tok (\p s -> TokenNot p)}
   Impedimenta                        { tok (\p s -> TokenNotEq p)}
   \n                                 { tok (\p s -> TokenNewLine p)}
+  \-                                 { tok (\p s -> TokenDash p)}
+  \,                                 { tok (\p s -> TokenComma p)}
+--  space                              { tok (\p s -> TokenSpace p)}
+--  newLn                              { tok (\p s -> TokenNewLn p)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -109,11 +113,11 @@ data SpellBookToken =
   TokenInt AlexPosn Int           |
  -- TokenArr AlexPosn String    |
   TokenVar AlexPosn String    |
-  TokenOfType AlexPosn        |
+--  TokenOfType AlexPosn        |
   TokenWriteFile AlexPosn     |
   TokenTrue AlexPosn          |
   TokenFalse AlexPosn         |
-  TokenBool AlexPosn          |
+--  TokenBool AlexPosn          |
   TokenGetXY AlexPosn         |
   --TokenEndStatement AlexPosn  |
   TokenNot AlexPosn           |
@@ -123,9 +127,12 @@ data SpellBookToken =
   TokenGreaterEq AlexPosn     |
   TokenEqEq AlexPosn          |
   TokenNotEq AlexPosn         |
-  TokenNewLine AlexPosn       |
+  TokenDash AlexPosn          |
+  TokenComma AlexPosn         |
+--  TokenSpace AlexPosn         |
+  TokenNewLine AlexPosn
 --  TokenString AlexPosn String |
-  TokenFile AlexPosn String
+ -- TokenFile AlexPosn String
   deriving (Eq,Show)
 
 tokenPosn :: SpellBookToken -> String
@@ -161,18 +168,18 @@ tokenPosn (TokenRevert (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenBegin (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPower (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenArrType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenIntType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenArrType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenIntType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenVar (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenInt (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenOfType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenOfType (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 --tokenPosn (TokenEndStatement (AlexPn a l c)) = show(l) ++ ":" ++ show(C)
-tokenPosn (TokenFile (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenArr (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenFile (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenArr (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWriteFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenBool (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenBool (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGetXY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNot (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEqEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -183,6 +190,11 @@ tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreaterEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNewLine (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenDash (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenComma (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+--tokenPosn (TokenSpace (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+
+
 
 
 }
