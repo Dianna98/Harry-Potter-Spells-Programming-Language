@@ -10,7 +10,7 @@ $alpha = [a-zA-Z]
 
 tokens :-
 $white+       ;
-  Illegibilus        ;
+  Illegibilus  [$alpha $white]* \.         ;
   Engorgio                           { tok (\p s -> TokenPlus p)}
   Reducio                            { tok (\p s -> TokenMinus p) }
   Geminio                            { tok (\p s -> TokenTimes p) }
@@ -115,7 +115,7 @@ data SpellBookToken =
   TokenNotEq AlexPosn         |
   TokenComma AlexPosn         |
   TokenArrBeginning AlexPosn  |
-  TokenArrEnd AlexPosn        
+  TokenArrEnd AlexPosn
   deriving (Eq,Show)
 
 tokenPosn :: SpellBookToken -> String
