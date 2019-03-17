@@ -39,19 +39,6 @@ import SpellBookTokens
   FiniteIncantatem                   {TokenEndWhile _ }
   AlarteAscendere                    {TokenPower  _ }
   Confringo                          {TokenGetXY _ }
-  lumos                              {TokenTrue _ }
-  nox                                {TokenFalse _ }
- -- Light                              {TokenBool _ }
-  Apparate                           {TokenWriteFile _ }
---  Hogwarts                           {TokenArrType _ }
---  Wizard                             {TokenIntType _ }
-  horcruxInt                         {TokenVar _  $$ }
-  horcruxArr                         {TokenVar _  $$ }
-  horcruxBool                        {TokenVar _  $$ }
-  int                                {TokenInt _  $$ }
- -- arr                                {TokenArr _ $$ }
- -- ':'                                {TokenOfType _ }
- -- file                               {TokenFile _ $$ }
   Entomorphis                        {TokenLess _ }
   CarpeRetractum                     {TokenLessEq _ }
   Defodio                            {TokenGreater _ }
@@ -59,16 +46,20 @@ import SpellBookTokens
   Caterwauling                       {TokenEqEq _ }
   Crucio                             {TokenNot _ }
   Impedimenta                        {TokenNotEq _ }
-  newLine                            {TokenNewLine _ }
-  '-'                                {TokenDash _ }
+  lumos                              {TokenTrue _ }
+  nox                                {TokenFalse _ }
+  Apparate                           {TokenWriteFile _ }
+  horcrux                            {TokenVar _ $$ }
+  int                                {TokenInt _  $$ }
   ','                                {TokenComma _ }
---  space                              {TokenSpace _ }
---  newLn                              {TokenNewLn _ }
+  '['                                {TokenArrBeginning _ }
+  ']'                                {TokenArrEnd _ }
 
 %right Appare
 %right Vestigium
 %right Fidelius
-%nonassoc int horcruxInt horcruxArr horcruxBool arr '(' ')' lumos nox Alohomora Colloportus
+--%right Crucio
+%nonassoc int horcrux arr '(' ')' lumos nox Alohomora Colloportus
 %nonassoc Entomorphis CarpeRetractum Defodio Deprimo Caterwauling Impedimenta
 %nonassoc Legilimens Confringo Incendio Aguamenti
 %left Depulso Flipendo Ventus Obliviate Expelliarmus EverteStatum Confringo
@@ -80,8 +71,11 @@ import SpellBookTokens
 %left Crucio
 %left Flagrate
 %left WingardiumLeviosa Imperio
-%left newLine
 %%
+Body : Alohomora Body                                          { Begin $2 }
+     | Expr Body                                               { Multi $1 $2 }
+     | Expr Colloportus                                        { Single $1 }
+
 Expr : Engorgio Expr Expr                                              { Plus $2 $3 }
      | Reducio Expr Expr                                               { Minus $2 $3 }
      | Geminio Expr Expr                                               { Times $2 $3 }
@@ -108,24 +102,25 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Crucio Expr                                                     { Not $2 }
      | '(' Expr ')'                                                    { Br $2 }
      | int                                                             { Nr $1 }
-     | lumos                                                           { True }
-     | nox                                                             { False }
+     | lumos                                                           { Logic True  }
+     | nox                                                             { Logic False }
      --| Arr                                                             { Arr $1 }
-     | Var                                                             { $1 }
+     | horcrux                                                         { Var $1 }
      | Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
      | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
      | WingardiumLeviosa Expr Imperio Body FiniteIncantatem            { While $2 $4 }
-     | Appare Fidelius Var Expr Vestigium Body                         { Let $3 $4 $6 }
-     | Fidelius Var Expr                                               { Assign $2 $3 }
+     | Appare Fidelius horcrux Expr Vestigium Body                     { Let $3 $4 $6 }
+     | Fidelius horcrux Expr                                           { Assign $2 $3 }
      | Flagrate Expr                                                   { Write $2 }
+     | '[' Arr ']'                                                     { Arr $2}
 
-Var :  horcruxInt                                                      { VarInt $1 }
-     | horcruxArr                                                      { VarArr $1 }
-     | horcruxBool                                                     { VarBool $1 }
+Arr :  {- empty -}       { [] }
+     | int               { [$1]}
+     | Arr ',' int       { $3 : $1}
 
-Body : Alohomora Body                                                  { Begin $2 }
-     | Expr newLine Body                                               { Multi $1 $3 }
-     | Expr Colloportus                                                { Single $1 }
+-- Var :  horcruxInt                                                      { VarInt $1 }
+--      | horcruxArr                                                      { VarArr $1 }
+--      | horcruxBool                                                     { VarBool $1 }
 
 -- Arr :  {- empty -}                            { [] }
 --      | '-' int                                { [-$2] }
@@ -166,15 +161,27 @@ data Expr = Plus Expr Expr
           | Not Expr
           | Br Expr
           | Nr Int
-          | Var
-          | Bool
+          | Arr [Int]
+          | Var String
+          | Logic Bool
           | IfThenElse Expr Body Body
           | IfThen Expr Body
           | While Expr Body
-          | Let Var Expr Body
-          | Assign Var Expr
+          | Let String Expr Body
+          | Assign String Expr
           | Write Expr
           deriving (Show,Eq)
+
+-- data Variable = VarInt String
+--               | VarArr String
+--               | VarBool String
+--               deriving (Show,Eq)
+
+data Body = Begin Body
+          | Multi Expr Body
+          | Single Expr
+          deriving (Show,Eq)
+
 
 
 -- data IntExpr = Plus IntExpr IntExpr
@@ -218,17 +225,5 @@ data Expr = Plus Expr Expr
 --           | Assign Var Expr
 --           | Write Expr
 --           deriving (Show,Eq)
-
-data Var = VarInt String
-         | VarArr String
-         | VarBool String
-         deriving (Show,Eq)
-
-data Body = Begin Body
-          | Multi Expr Body
-          | Single Expr
-          deriving (Show,Eq)
-
-
 
 }
