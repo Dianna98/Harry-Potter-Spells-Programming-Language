@@ -1,24 +1,38 @@
 module SpellBookEval where
 import SpellBookGrammar
 
-data Expr = Data | Action deriving (Show,Eq)
-type Environment = [ (String,Expr) ]
+data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
 
+valueNr :: Value -> Int
+valueNr (Integer x) = x
+valueNr _  = error "Expecto Patronum! Type mismatched! Integer Expected!"
 
-isTerminated :: Expr -> Bool
-isTerminated (Nr _) = True
-isTerminated (Arr _) = True
-isTerminated (Lumos) = True
-isTerminated (Nox) = True
-isTerminated _ = False
+valueBool :: Value -> Bool
+valueBool (Boolean x) = x
+valueBool _ = error "Expecto Patronum! Type mismatched! Boolean Expected!"
 
-unpack :: Expr -> (Expr,Environment)
-unpack e = (e,[])
+valueArr :: Value -> [Int]
+valueArr (Array x) = x
+valueArr _ = error "Expecto Patronum! Type mismatched! Array of integers expected!"
 
-getValueBinding :: String Environment -> (Expr,Environment)
-getValueBinding x [] = error "Expecto Patronum! Variable binding not found!"
-getValueBinding x ((y,e):env) | x == y = unpack e
-                              | otherwise = getValueBinding x env
+getValue :: Expr -> Value
+getValue (Nr x) = Integer x
+getValue (Logic x) = Boolean x
+getValue (Arr x) = Array x
+getValue _ = error "Baubillious! Unknown value!"
 
-update :: Environment -> String -> Expr -> Environment
-update env x e = (x,e):env
+-- getValueBinding :: String -> Environment -> (Expr,Environment)
+-- getValueBinding x [] = error "Expecto Patronum! Variable not found!"
+-- getValueBinding x ((y,e):env) | x == y  = unpack e
+--                               | otherwise = getValueBinding x env
+--
+isTerminal :: Expr -> Bool
+isTerminal (Nr x) = True
+isTerminal (Logic x) = True
+isTerminal (Arr x) = True
+isTerminal _ = False
+
+eval :: Expr -> Environment -> Value
+eval (Plus x y) e   | (isTerminal x) && (isTerminal y) = Integer ((valueNr (getValue x)) + (valueNr (getValue y)))
+                    | !(isTerminal x) = eval x e
+                    | !(isTerminal y) = eval y e
