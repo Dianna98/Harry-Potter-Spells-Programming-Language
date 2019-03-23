@@ -105,7 +105,7 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Crucio Expr                                                     { Not $2 }
      | '(' Expr ')'                                                    { Br $2 }
      | int                                                             { Nr $1 }
-     | lumos                                                           { Logic True  }
+     | lumos                                                           { Logic True }
      | nox                                                             { Logic False }
      | horcrux                                                         { Var $1 }
      | Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
