@@ -54,7 +54,7 @@ import SpellBookTokens
   ','                                {TokenComma _ }
   '['                                {TokenArrBeginning _ }
   ']'                                {TokenArrEnd _ }
-  Informous                           {TokenLength _ }
+  Informous                          {TokenLength _ }
 
 %right Appare
 %right Vestigium
@@ -86,7 +86,7 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Accio Expr Expr                                                 { Get $2 $3 }
      | Ascendio Expr                                                   { Head $2 }
      | PrioriIncantatem Expr                                           { Last $2 }
-     | Informous Expr                                                   { Length $2 }
+     | Informous Expr                                                  { Length $2 }
      | Ferula Expr                                                     { Sum $2 }
      | Depulso Expr Expr                                               { AddLst $2 $3 }
      | Flipendo Expr Expr                                              { AddFst $2 $3 }
@@ -114,11 +114,12 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Appare Fidelius horcrux Expr Vestigium Body                     { Let $3 $4 $6 }
      | Fidelius horcrux Expr                                           { Assign $2 $3 }
      | Flagrate Expr                                                   { Write $2 }
+     | Legilimens Expr                                                 { GetInArr $2}
      | '[' Arr ']'                                                     { Arr $2 }
 
 Arr :  {- empty -}       { [] }
      | int               { [$1]}
-     | Arr ',' int       { $3 : $1 }
+     | Arr ',' int       { $1 ++ ($3:[])}
 
 {
 parseError :: [SpellBookToken] -> a
@@ -164,6 +165,7 @@ data Expr = Plus Expr Expr
           | Let String Expr Body
           | Assign String Expr
           | Write Expr
+          | GetInArr Expr
           deriving (Show,Eq)
 
 data Body = Begin Body
