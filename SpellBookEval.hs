@@ -109,6 +109,12 @@ get i [] = error "Baubillious! Index out of bounds!"
 get i (x:xs)  | (fst x) == i = snd x
               | otherwise = get i xs
 
+-- this function removes the i th element in the array
+remove :: Int -> [(Int,Int)] -> [Int]
+remove i [] = error "Baubillious! Index out of bounds!"
+remove i (x:xs)     | (fst x) == i = remove i xs
+                    | otherwise = (snd x) : (remove i xs)
+
 -- this function checks if an expression returns type Int
 isNr :: Expr -> Environment -> Bool
 isNr (Nr x) e = True
@@ -267,9 +273,13 @@ evalExpr (And x y) e out = ((Boolean ((getBoolVal(fst(fst(evalExpr x e out)))) &
 evalExpr (Or x y) e out = ((Boolean ((getBoolVal(fst(fst(evalExpr x e out)))) || (getBoolVal (fst(fst(evalExpr y e out))))),e),out)
 
 --evaluates expression that adds an element to the beginnig of the list
+evalExpr (AddFst x (Var y)) e out = ((Array array, update y (Arr array) e),out)
+                                        where array = ((getNrVal(fst(fst(evalExpr x e out)))) : (getArrVal (fst(fst(evalExpr (Var y) e out)))))
 evalExpr (AddFst x y) e out = ((Array ((getNrVal(fst(fst(evalExpr x e out)))) : (getArrVal (fst(fst(evalExpr y e out))))),e),out)
 
 -- evaluates expression that adds an element to the end of the list
+evalExpr (AddLst x (Var y)) e out = ((Array array, update y (Arr array) e),out)
+                                        where array = (getArrVal (fst(fst(evalExpr (Var y) e out)))) ++ ((getNrVal(fst(fst(evalExpr x e out)))):[])
 evalExpr (AddLst x y) e out = ((Array ((getArrVal (fst(fst(evalExpr y e out)))) ++ ((getNrVal(fst(fst(evalExpr x e out)))):[])),e),out)
 
 -- evaluates concatenation expression
@@ -277,19 +287,11 @@ evalExpr (Concat x y) e out = ((Array ((getArrVal(fst(fst(evalExpr x e out)))) +
 
 -- evaluates expression that gets the x th element from a list
 evalExpr (Get x y) e out = ((Integer (get (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr y e out)))))),e),out)
-                              where
-                                   get :: Int -> [(Int,Int)] -> Int
-                                   get i [] = error "Baubillious! Index out of bounds!"
-                                   get i (x:xs)  | (fst x) == i = snd x
-                                                 | otherwise = get i xs
 
 -- evaluates expression that removes the x th element from a list
+evalExpr (Remove x (Var y)) e out = ((Array array,update y (Arr array) e),out)
+                                        where array = remove (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr (Var y) e out)))))
 evalExpr (Remove x y) e out = ((Array (remove (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr y e out)))))),e),out)
-                              where
-                                   remove :: Int -> [(Int,Int)] -> [Int]
-                                   remove i [] = error "Baubillious! Index out of bounds!"
-                                   remove i (x:xs)     | (fst x) == i = remove i xs
-                                                       | otherwise = (snd x) : (remove i xs)
 
 -- evaluates expression that returns the array from index x to y
 evalExpr (GetXY x y arr) e out = ((Array (get (getNrVal(fst(fst(evalExpr x e out)))) (getNrVal(fst(fst(evalExpr y e out)))) (index(getArrVal (fst(fst(evalExpr arr e out)))))),e),out)
