@@ -14,7 +14,7 @@ parseFile :: String -> [[Int]]
 parseFile s = transpose(map getInts (getNumbers(getLines s)))
 
 getLines :: String -> [String]
-getLines s = splitOn "\n" s
+getLines (s:ss) = splitOn "\n" s
 
 getNumbers :: [String] -> [[String]]
 getNumbers [] = []

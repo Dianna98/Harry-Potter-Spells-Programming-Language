@@ -14,7 +14,7 @@ DEPEND += SpellBookTokens.hs SpellBookGrammar.hs SpellBookEval.hs
 all: $(DEPEND) SpellBookInteractive SpellBook
 
 # Build an executable for SpellBook interpreter
-SpellBook: $(DEPEND) SpellBook.hs
+myinterpreter: $(DEPEND) SpellBook.hs
 	ghc SpellBook.hs
 
 # Build an executable for interactive mode
