@@ -1,0 +1,47 @@
+Alohomora
+
+Fidelius n Informous (Legilimens 0)
+Fidelius out []
+Fidelius light nox
+
+Confundo Deprimo n 2
+     Incendio Alohomora
+          Fidelius light lumos
+          Fidelius out Depulso (Accio 0 Legilimens 0) out
+          Fidelius out Depulso (Ferula (Confringo 0 1 Legilimens 0)) out
+     FiniteIncantatem
+
+     Aguamenti Alohomora
+     Confundo Defodio n o
+          Incendio Alohomora
+               Fidelius out Depuls (Accio 0 Legilimens 0) out
+          FiniteIncantatem
+     FiniteIncantatem
+
+Fidelius i 2
+
+WingardiumLeviosa (Serpensortia light (Entomorphis i n)) Imperio
+     Alohomora
+          Fidelius x 1
+          Fidelius y 1
+          Fidelius wand EverteStatum (Confringo 0 i Legilimens 0)
+          Fidelius s (Ferula (Confringo 0 1 wand))
+          Fidelius j 2
+
+          WingardiumLeviosa (Entomorphis j Informous wand) Imperio
+               Alohomora
+               Fidelius z Engorgio x y
+               Fidelius x y
+               Fidelius y z
+               Fidelius s Engorgio s Geminio y (Accio j wand)
+               Fidelius j Engorgio j 1
+               FiniteIncantatem
+
+          Fidelius out Depulso s out
+          Fidelius i Engorgio i 1
+     FiniteIncantatem
+
+
+Flagrate out
+
+FiniteIncantatem

@@ -11,13 +11,15 @@ main :: IO ()
 main = catch main' noParse
 
 main' = do
-           sourceText <- readFile "pr1.spl"
-           putStrLn ("Input : \n" ++ sourceText)
+           sourceText <- readFile "pr2.spl"
+          -- putStrLn ("Input : \n" ++ sourceText)
            let parsedProg = parseCalc (alexScanTokens sourceText)
-           putStrLn ("Parsed as : \n" ++ (show parsedProg))
-           input <- readFile "in.txt"
+          -- putStrLn ("Parsed as : \n" ++ (show parsedProg))
+           input <- readFile "in2.txt"
            let solution = snd(evalBody parsedProg (initEnv 0 (parseFile input)) [] )
-           putStrLn ("Solution : \n" ++ (show solution))
+           if (length solution>0) then
+               putStrLn (write solution (length (head solution)))
+               else putStrLn ""
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e

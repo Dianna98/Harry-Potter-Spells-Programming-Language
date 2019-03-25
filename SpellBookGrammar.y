@@ -46,6 +46,9 @@ import SpellBookTokens
   Episkey                            {TokenEqEq _ }
   Crucio                             {TokenNot _ }
   Impedimenta                        {TokenNotEq _ }
+  Evanesce                           {TokenOr _ }
+  Serpensortia                       {TokenAnd _ }
+  VeraVerto                          {TokenForEach _ }
   lumos                              {TokenTrue _ }
   nox                                {TokenFalse _ }
   Apparate                           {TokenWriteFile _ }
@@ -55,13 +58,14 @@ import SpellBookTokens
   '['                                {TokenArrBeginning _ }
   ']'                                {TokenArrEnd _ }
   Informous                          {TokenLength _ }
+  Pack                               {TokenInputSize _ }
 
 %right Appare
 %right Vestigium
 %right Fidelius
 --%right Crucio
 %nonassoc int horcrux arr '(' ')' lumos nox Alohomora Colloportus
-%nonassoc Entomorphis CarpeRetractum Defodio Deprimo Episkey Impedimenta
+%nonassoc Entomorphis CarpeRetractum Defodio Deprimo Episkey Impedimenta Evanesce Serpensortia
 %nonassoc Legilimens Confringo Incendio Aguamenti
 %left Depulso Flipendo Ventus Obliviate Expelliarmus EverteStatum Confringo
 %left Epoximise
@@ -103,6 +107,8 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Episkey Expr Expr                                               { Eq $2 $3 }
      | Impedimenta Expr Expr                                           { NotEq $2 $3 }
      | Crucio Expr                                                     { Not $2 }
+     | Serpensortia Expr Expr                                          { And $2 $3 }
+     | Evanesce Expr Expr                                              { Or $2 $3 }
      | '(' Expr ')'                                                    { Br $2 }
      | int                                                             { Nr $1 }
      | lumos                                                           { Logic True }
@@ -111,11 +117,13 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Confundo Expr Incendio Body Aguamenti Body                      { IfThenElse $2 $4 $6 }
      | Confundo Expr Incendio Body                                     { IfThen $2 $4 }
      | WingardiumLeviosa Expr Imperio Body                             { While $2 $4 }
+     --| VeraVerto '{' horcrux Arr '}' Body                              { ForEach $3 $4 $6 }
      | Appare Fidelius horcrux Expr Vestigium Body                     { Let $3 $4 $6 }
      | Fidelius horcrux Expr                                           { Assign $2 $3 }
      | Flagrate Expr                                                   { Write $2 }
      | Legilimens Expr                                                 { GetInArr $2}
      | '[' Arr ']'                                                     { Arr $2 }
+     | Pack                                                            { InputSize}
 
 Arr :  {- empty -}       { [] }
      | int               { [$1]}
@@ -154,6 +162,8 @@ data Expr = Plus Expr Expr
           | Eq Expr Expr
           | NotEq Expr Expr
           | Not Expr
+          | And Expr Expr
+          | Or Expr Expr
           | Br Expr
           | Nr Int
           | Arr [Int]
@@ -162,10 +172,12 @@ data Expr = Plus Expr Expr
           | IfThenElse Expr Body Body
           | IfThen Expr Body
           | While Expr Body
+          | VeraVerto Expr Expr Body
           | Let String Expr Body
           | Assign String Expr
           | Write Expr
           | GetInArr Expr
+          | InputSize
           deriving (Show,Eq)
 
 data Body = Begin Body

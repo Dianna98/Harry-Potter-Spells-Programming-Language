@@ -38,9 +38,9 @@ $white+       ;
   Aguamenti                          { tok (\p s -> TokenElse p) }
   Epoximise                          { tok (\p s -> TokenConcat p) }
   Alohomora                          { tok (\p s -> TokenBegin p) }
-  Informous                           { tok (\p s -> TokenLength p)}
+  Informous                          { tok (\p s -> TokenLength p)}
   Legilimens                         { tok (\p s -> TokenRead p ) }
-  \. txt                             { tok (\p s -> TokenTxt p)}
+  VeraVerto                          { tok (\p s -> TokenForEach p)}
   Flagrate                           { tok (\p s -> TokenWrite p) }
   Apparate                           { tok (\p s -> TokenWriteFile p)}
   EverteStatum                       { tok (\p s -> TokenRevert p) }
@@ -56,13 +56,16 @@ $white+       ;
   Crucio                             { tok (\p s -> TokenNot p)}
   Impedimenta                        { tok (\p s -> TokenNotEq p)}
   Confringo                          { tok (\p s -> TokenGetXY p)}
+  Evanesce                           { tok (\p s -> TokenOr p)}
+  Serpensortia                       { tok (\p s -> TokenAnd p)}
+  Pack                               { tok (\p s -> TokenInputSize p)}
   \- $digit+                         { tok (\p s -> TokenInt p (read s))}
   \,                                 { tok (\p s -> TokenComma p)}
   \[                                 { tok (\p s -> TokenArrBeginning p)}
   \]                                 { tok (\p s -> TokenArrEnd p)}
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
   $letter [$letter $digit \_ \`]*    { tok (\p s -> TokenVar p s) }
-  [$letter $digit \_]* \.txt          { tok (\p s -> TokenFile p s) }
+  [$letter $digit \_]* \.txt         { tok (\p s -> TokenFile p s) }
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -106,7 +109,7 @@ data SpellBookToken =
   TokenPower AlexPosn            |
   TokenInt AlexPosn Int           |
   TokenVar AlexPosn String    |
-  TokenTxt AlexPosn           |
+  TokenForEach AlexPosn           |
   TokenWriteFile AlexPosn     |
   TokenTrue AlexPosn          |
   TokenFalse AlexPosn         |
@@ -121,7 +124,10 @@ data SpellBookToken =
   TokenComma AlexPosn         |
   TokenFile AlexPosn String   |
   TokenLength AlexPosn        |
+  TokenInputSize AlexPosn     |
   TokenArrBeginning AlexPosn  |
+  TokenAnd AlexPosn           |
+  TokenOr AlexPosn            |
   TokenArrEnd AlexPosn
   deriving (Eq,Show)
 
@@ -174,8 +180,12 @@ tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenComma (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenArrBeginning (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenArrEnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenTxt (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenForEach (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFile (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLength (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenInputSize (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+
 
 }

@@ -1,15 +1,13 @@
 Alohomora
-Fidelius x lumos
-Fidelius y 0
-WingardiumLeviosa x Imperio
-               Alohomora
-                    Confundo Episkey y 1
-                              Incendio Alohomora
-                                       Flagrate [2]
-                                       Fidelius x nox
-                                       FiniteIncantatem
-                              Aguamenti Alohomora
-                                       Fidelius y Engorgio y 1
-                                       FiniteIncantatem
-               FiniteIncantatem
+
+Fidelius n Pack
+Fidelius i 0
+
+WingardiumLeviosa Entomorphis i n Imperio
+          Alohomora
+               Fidelius x Legilimens i
+               Flagrate Flipendo 0 Ventus x
+               Fidelius i Engorgio i 1
+          FiniteIncantatem
+
 FiniteIncantatem

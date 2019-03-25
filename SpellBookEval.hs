@@ -42,7 +42,14 @@ getInts (s:ss) = (read s):getInts ss
 -- getStreams (x:xs) max = (addNothing (getInts x) (max-(length x))) : getStreams xs max
 
 -- this function prints the output in the required format
+write :: [[Int]] -> Int -> String
+write x n | n <= 0 = ""
+          | otherwise = (write x (n-1)) ++ (printN (n-1) x) ++ "\n"
 
+printN :: Int -> [[Int]] -> String
+printN n [] = ""
+printN n (x:xs)     | n < length x = (show (get n (index x)))++" "++ printN n xs
+                    | otherwise = printN n xs
 
 -- this function initialises the environment with the data from the input file
 initEnv :: Int -> [[Int]] -> Environment
@@ -86,14 +93,21 @@ update var expr (e:es)   | var == fst(e) = update var expr es
                          | otherwise = e: update var expr es
 
 -- this function returns the expression associated to a value within the Environment
-getVar :: String -> Environment -> Expr
-getVar x [] = error "Riddikulus! Variable not in scope!"
-getVar x (e:es)  | (fst e) == x = snd e
-                 | otherwise = getVar x es
+getVar :: String -> Environment -> Environment -> (Expr,Environment)
+getVar x [] env = error ("Riddikulus! Variable "++x++" not in scope!")
+getVar x (e:es) env  | (fst e) == x = (snd e,env)
+                     | ((take 8 x) == "horcrux_") && (lookup x env == Nothing) = (Arr [], update x (Arr []) env)
+                     | otherwise = getVar x es env
 
 -- this function returns an indexed array
 index :: [Int] -> [(Int,Int)]
 index x = zip [0,1..] x
+
+-- this function returns the Int on the position i in the array
+get :: Int -> [(Int,Int)] -> Int
+get i [] = error "Baubillious! Index out of bounds!"
+get i (x:xs)  | (fst x) == i = snd x
+              | otherwise = get i xs
 
 -- this function checks if an expression returns type Int
 isNr :: Expr -> Environment -> Bool
@@ -109,7 +123,9 @@ isNr (Head x) e = True
 isNr (Last x) e = True
 isNr (Sum x) e = True
 isNr (Length x) e = True
-isNr (Var x) e = isNr (getVar x e) e
+isNr (InputSize) e = True
+isNr (Var x) e = isNr (fst(getVar x e e)) e
+isNr (Br x) e = isNr x e
 isNr _ e = False
 
 -- this function checks if an expression returns type Bool
@@ -122,7 +138,10 @@ isBool (GreaterEq x y) e = True
 isBool (Eq x y) e = True
 isBool (NotEq x y) e = True
 isBool (Not x) e = True
-isBool (Var x) e = isBool (getVar x e) e
+isBool (And x y) e = True
+isBool (Or x y) e = True
+isBool (Var x) e = isBool (fst(getVar x e e)) e
+isBool (Br x) e = isBool x e
 isBool _ e= False
 
 -- this function checks if and expression returns type [Int]
@@ -137,7 +156,8 @@ isArr (Concat x y) e = True
 isArr (Revert x) e = True
 isArr (GetXY x y z) e = True
 isArr (GetInArr x) e = True
-isArr (Var x) e = isArr (getVar x e) e
+isArr (Var x) e = isArr (fst(getVar x e e)) e
+isArr (Br x) e = isArr x e
 isArr _ e = False
 
 -- this function evaluates Expr data type
@@ -148,7 +168,7 @@ evalExpr (Assign var expr) e out | isNr expr e = ((fst(fst(evalExpr expr e out))
                                  | isArr expr e = ((fst(fst(evalExpr expr e out)),update var (Arr (getArrVal(fst(fst(evalExpr expr e out))))) e),out)
 
 -- evaluates variables
-evalExpr (Var x) e out = ((fst(fst(evalExpr (getVar x e) e out)),e),out)
+evalExpr (Var x) e out = ((fst(fst(evalExpr (fst(getVar x e e)) e out)),snd(getVar x e e)),out)
 
 -- evaluates integers
 evalExpr (Nr x) e out = ((Integer x,e),out)
@@ -214,10 +234,37 @@ evalExpr (Greater x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out))))
 evalExpr (GreaterEq x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out)))) >= (getNrVal (fst(fst(evalExpr y e out))))),e),out)
 
 -- evaluates equality expression
-evalExpr (Eq x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out)))) == (getNrVal (fst(fst(evalExpr y e out))))),e),out)
+evalExpr (Eq x y) e out  | (isNr x e) && (isNr y e) = ((Boolean (nrX == nrY),e),out)
+                         | (isBool x e) && (isBool y e) = ((Boolean (boolX == boolY),e),out)
+                         | (isArr x e) && (isArr y e) = ((Boolean (arrX == arrY),e),out)
+                         | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Episkey'!"
+                                   where
+                                        nrX = getNrVal(fst(fst(evalExpr x e out)))
+                                        nrY = getNrVal(fst(fst(evalExpr y e out)))
+                                        boolX = getBoolVal(fst(fst(evalExpr x e out)))
+                                        boolY = getBoolVal(fst(fst(evalExpr y e out)))
+                                        arrX = getArrVal(fst(fst(evalExpr x e out)))
+                                        arrY = getArrVal(fst(fst(evalExpr y e out)))
 
 -- evaluates not equal expression
-evalExpr (NotEq x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out)))) /= (getNrVal (fst(fst(evalExpr y e out))))),e),out)
+evalExpr (NotEq x y) e out | (isNr x e) && (isNr y e) = ((Boolean (nrX /= nrY),e),out)
+                           | (isBool x e) && (isBool y e) = ((Boolean (boolX /= boolY),e),out)
+                           | (isArr x e) && (isArr y e) = ((Boolean (arrX /= arrY),e),out)
+                           | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Impedimenta'!"
+
+                                   where
+                                        nrX = getNrVal(fst(fst(evalExpr x e out)))
+                                        nrY = getNrVal(fst(fst(evalExpr y e out)))
+                                        boolX = getBoolVal(fst(fst(evalExpr x e out)))
+                                        boolY = getBoolVal(fst(fst(evalExpr y e out)))
+                                        arrX = getArrVal(fst(fst(evalExpr x e out)))
+                                        arrY = getArrVal(fst(fst(evalExpr y e out)))
+
+-- evaluates and expression
+evalExpr (And x y) e out = ((Boolean ((getBoolVal(fst(fst(evalExpr x e out)))) && (getBoolVal (fst(fst(evalExpr y e out))))),e),out)
+
+-- evaluates or expression
+evalExpr (Or x y) e out = ((Boolean ((getBoolVal(fst(fst(evalExpr x e out)))) || (getBoolVal (fst(fst(evalExpr y e out))))),e),out)
 
 --evaluates expression that adds an element to the beginnig of the list
 evalExpr (AddFst x y) e out = ((Array ((getNrVal(fst(fst(evalExpr x e out)))) : (getArrVal (fst(fst(evalExpr y e out))))),e),out)
@@ -248,13 +295,13 @@ evalExpr (Remove x y) e out = ((Array (remove (getNrVal(fst(fst(evalExpr x e out
 evalExpr (GetXY x y arr) e out = ((Array (get (getNrVal(fst(fst(evalExpr x e out)))) (getNrVal(fst(fst(evalExpr y e out)))) (index(getArrVal (fst(fst(evalExpr arr e out)))))),e),out)
                               where
                                    get :: Int -> Int -> [(Int,Int)] -> [Int]
-                                   get x y [] = error "Baubillious! Indeo out of bounds!"
+                                   get x y [] = []
                                    get x y (a:arr)    | ((fst a)>=x) && ((fst a)<=y) = (snd a) : (get x y arr)
                                                       | otherwise = get x y arr
 
--- evaluates print expression
+-- evaluates write expression
 evalExpr (Write x) e out | isArr x e = (fst (evalExpr x e out),out ++ ((getArrVal(fst(fst(evalExpr x e out)))):[]))
-                         | isNr x e = (fst (evalExpr x e out),out ++ (((getNrVal(fst(fst(evalExpr x e out)))):[]):[]))
+                         | otherwise = error "Expecto Patronum! Stream of integers expected on writing!"
 
 -- evaluates if then else expression
 evalExpr (IfThenElse b x y) e out  | getBoolVal (fst(fst(evalExpr b e out))) = evalBody x e out
@@ -268,8 +315,8 @@ evalExpr (IfThen b x) e out   | getBoolVal (fst(fst(evalExpr b e out))) = evalBo
 evalExpr (Let var expr body) e out = ((fst(fst(evalBody body (update var expr e) out)), e), snd(evalBody body (update var expr e) out))
 
 -- evaluates while loop expression
-evalExpr (While x body) e out | getBoolVal (fst(fst(evalExpr x e out))) = evalExpr (While cond body) env output
-                              | otherwise = ((Boolean True,e),out)
+evalExpr (While x body) e out | getBoolVal (fst(fst(evalExpr x e out))) = evalExpr (While x body) env output
+                              | otherwise = ((Boolean False,e),out)
                                         where
                                              bodyEval = evalBody body e out
                                              env = snd(fst bodyEval)
@@ -278,10 +325,14 @@ evalExpr (While x body) e out | getBoolVal (fst(fst(evalExpr x e out))) = evalEx
                                              cond = Logic (getBoolVal evalCond)
 
 -- evaluates expression that returns the x th input array, starting with 0
-evalExpr (GetInArr x) e out = (((Array(getArr (getVar ("horcrux_"++(show (getNrVal (fst(fst(evalExpr x e out)))))) e))),e),out)
+evalExpr (GetInArr x) e out = ((Array(getArr (fst var)),snd var),out)
+                                   where var = getVar ("horcrux_"++(show (getNrVal (fst(fst(evalExpr x e out)))))) e e
 
 -- evaluates function that returns the environment size
---evalExpr (InputSize) e out = ((Integer (length e),e),out)
+evalExpr (InputSize) e out = ((Integer (length e),e),out)
+
+-- evaluates expression within brackets
+evalExpr (Br x) e out = evalExpr x e out
 
 -- evaluates Body data type
 evalBody :: Body -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
