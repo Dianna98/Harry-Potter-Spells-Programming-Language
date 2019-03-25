@@ -1,6 +1,5 @@
 module SpellBookEval where
 import SpellBookGrammar
-import Data.List.Split
 import Data.List
 
 data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
@@ -11,14 +10,11 @@ data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
 -- parseFile s = let x = (getNumbers (getLines s))
 --                          in transpose (getStreams x (getMaxLen x 0))
 parseFile :: String -> [[Int]]
-parseFile s = transpose(map getInts (getNumbers(getLines s)))
-
-getLines :: String -> [String]
-getLines (s:ss) = splitOn "\n" s
+parseFile s = transpose(map getInts (getNumbers(lines s)))
 
 getNumbers :: [String] -> [[String]]
 getNumbers [] = []
-getNumbers (s:ss) = (splitOn " " s) : getNumbers ss
+getNumbers (s:ss) = (words s) : getNumbers ss
 
 -- getInts :: [String] -> [Maybe Int]
 -- getInts [] = []
