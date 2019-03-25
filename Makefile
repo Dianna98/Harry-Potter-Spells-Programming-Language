@@ -9,17 +9,9 @@
 # Files that need to be generated from other files
 DEPEND += SpellBookTokens.hs SpellBookGrammar.hs SpellBookEval.hs
 
-# When "make" is invoked with no arguments, we build an executable
-#  after building everything that it depends on
-all: $(DEPEND) SpellBookInteractive SpellBook
-
 # Build an executable for SpellBook interpreter
 myinterpreter: $(DEPEND) SpellBook.hs
 	ghc SpellBook.hs
-
-# Build an executable for interactive mode
-SpellBookInteractive: $(DEPEND) SpellBookInteractive.hs
-	ghc SpellBookInteractive.hs
 
 # Generate ML files from a parser definition file
 SpellBookGrammar.hs : SpellBookGrammar.y

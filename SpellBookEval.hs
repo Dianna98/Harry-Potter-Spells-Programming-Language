@@ -5,47 +5,42 @@ import Data.List
 data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
 
 -- this function parses the data from the input file
--- parseFile :: String -> [[Maybe Int]]
--- parseFile :: String -> [[Maybe Int]]
--- parseFile s = let x = (getNumbers (getLines s))
---                          in transpose (getStreams x (getMaxLen x 0))
+
 parseFile :: String -> [[Int]]
-parseFile s = transpose(map getInts (getNumbers(lines s)))
+parseFile s = getStreams x (length (head x))
+               where x = map getInts (map words (lines s))
 
-getNumbers :: [String] -> [[String]]
-getNumbers [] = []
-getNumbers (s:ss) = (words s) : getNumbers ss
-
--- getInts :: [String] -> [Maybe Int]
--- getInts [] = []
--- getInts (s:ss) | s == "" = Nothing : getInts ss
---                | otherwise = (Just (read s)) : getInts ss
 getInts :: [String] -> [Int]
 getInts [] = []
-getInts (s:ss) = (read s):getInts ss
+getInts (s:ss) = case reads s :: [(Integer, String)] of
+                         [(_, "")] -> (read s):getInts ss
+                         _         -> error "Morsmordre! Invalid input file! Integer expected!"
 
--- getMaxLen :: [[String]] -> Int -> Int
--- getMaxLen [] max = max
--- getMaxLen (x:xs) max     | max < length x = getMaxLen xs (length x)
---                          | otherwise = getMaxLen xs max
---
--- addNothing :: [Maybe Int] -> Int -> [Maybe Int]
--- addNothing x 0 = x
--- addNothing x n = addNothing x (n-1) ++ (Nothing:[])
---
--- getStreams :: [[String]] -> Int -> [[Maybe Int]]
--- getStreams [] max = []
--- getStreams (x:xs) max = (addNothing (getInts x) (max-(length x))) : getStreams xs max
+getStreams :: [[Int]] -> Int -> [[Int]]
+getStreams s n | n < 1 = []
+               | otherwise = getStreams s (n-1) ++ ((getN s (n-1)):[])
+
+getN :: [[Int]] -> Int -> [Int]
+getN [] x = []
+getN (s:ss) x  | x < length s = (get x (index s)) : getN ss x
+               | otherwise = error "Morsmordre! Invalid input file! There cannot be streams of different lengths!"
 
 -- this function prints the output in the required format
 write :: [[Int]] -> Int -> String
 write x n | n <= 0 = ""
           | otherwise = (write x (n-1)) ++ (printN (n-1) x) ++ "\n"
 
+-- this function returns the string of all elements on the nth position of each list within the list of Ints
 printN :: Int -> [[Int]] -> String
 printN n [] = ""
 printN n (x:xs)     | n < length x = (show (get n (index x)))++" "++ printN n xs
                     | otherwise = printN n xs
+
+-- this function returns the length of the longest list
+getMaxLength :: [[Int]] -> Int -> Int
+getMaxLength [] max = max
+getMaxLength (x:xs) max  | length x > max = getMaxLength xs (length x)
+                         | otherwise = getMaxLength xs max
 
 -- this function initialises the environment with the data from the input file
 initEnv :: Int -> [[Int]] -> Environment

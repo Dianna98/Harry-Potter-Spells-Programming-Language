@@ -19,14 +19,18 @@ main' = do
            --     putStrLn (write result (length (head result)))
            --     else putStrLn ""
 
-           sourceText <- readFile "pr1.spl"
+           sourceText <- readFile "test.spl"
            let parsedProg = parseCalc (alexScanTokens sourceText)
-           input <- readFile "in1.txt"
+           putStrLn (show parsedProg)
+           input <- readFile "invalidIn.txt"
            let result = snd(evalBody parsedProg (initEnv 0 (parseFile input)) [] )
            if (length result>0) then
-               putStrLn (write result (length (head result)))
+               putStrLn (write result (getMaxLength result 0))
                else putStrLn ""
+
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e
+               putStrLn("\n--------------------")
                hPutStr stderr err
+               putStrLn("\n--------------------")
                return ()

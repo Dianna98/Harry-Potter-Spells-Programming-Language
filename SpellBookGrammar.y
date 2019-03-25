@@ -48,10 +48,8 @@ import SpellBookTokens
   Impedimenta                        {TokenNotEq _ }
   Evanesce                           {TokenOr _ }
   Serpensortia                       {TokenAnd _ }
-  VeraVerto                          {TokenForEach _ }
   lumos                              {TokenTrue _ }
   nox                                {TokenFalse _ }
-  Apparate                           {TokenWriteFile _ }
   horcrux                            {TokenVar _ $$ }
   int                                {TokenInt _  $$ }
   ','                                {TokenComma _ }
@@ -63,7 +61,6 @@ import SpellBookTokens
 %right Appare
 %right Vestigium
 %right Fidelius
---%right Crucio
 %nonassoc int horcrux arr '(' ')' lumos nox Alohomora Colloportus
 %nonassoc Entomorphis CarpeRetractum Defodio Deprimo Episkey Impedimenta Evanesce Serpensortia
 %nonassoc Legilimens Confringo Incendio Aguamenti
