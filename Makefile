@@ -13,6 +13,7 @@ DEPEND += SpellBookTokens.hs SpellBookGrammar.hs SpellBookEval.hs
 SpellBook: $(DEPEND) SpellBook.hs
 	ghc SpellBook.hs
 	cp SpellBook myinterpreter
+	rm SpellBook
 
 SpellBookInteractive: $(DEPEND) SpellBookInteractive.hs
 	ghc SpellBookInteractive.hs
@@ -33,3 +34,4 @@ SpellBookTokens.hs : SpellBookTokens.x
 clean::
 	rm -rf SpellBookTokens.hs SpellBookGrammar.hs *.hi *.o *.info
 	rm -f myinterpreter.*
+	rm myinterpreter
