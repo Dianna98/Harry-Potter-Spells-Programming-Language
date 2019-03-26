@@ -98539,36 +98539,36 @@ data SpellBookToken =
   TokenPlus AlexPosn          |
   TokenMinus AlexPosn         |
   TokenTimes AlexPosn         |
-  TokenDiv AlexPosn              |
+  TokenDiv AlexPosn           |
   TokenMod AlexPosn           |
   TokenDouble AlexPosn        |
   TokenSum AlexPosn           |
-  TokenGet AlexPosn              |
-  TokenHead AlexPosn              |
-  TokenLast AlexPosn              |
+  TokenGet AlexPosn           |
+  TokenHead AlexPosn          |
+  TokenLast AlexPosn          |
   TokenLParen AlexPosn        |
   TokenRParen AlexPosn        |
-  TokenAddEnd AlexPosn            |
+  TokenAddEnd AlexPosn        |
   TokenAddFront AlexPosn      |
-  TokenRemove AlexPosn            |
-  TokenInit AlexPosn             |
-  TokenTail AlexPosn             |
-  TokenEq AlexPosn                |
-  TokenLet AlexPosn              |
-  TokenIn AlexPosn               |
-  TokenIf AlexPosn                |
-  TokenThen AlexPosn             |
-  TokenElse AlexPosn             |
-  TokenConcat AlexPosn            |
-  TokenWhile AlexPosn             |
-  TokenDo AlexPosn               |
-  TokenRead AlexPosn             |
-  TokenWrite AlexPosn             |
-  TokenRevert AlexPosn            |
-  TokenBegin AlexPosn             |
-  TokenEnd AlexPosn               |
-  TokenPower AlexPosn            |
-  TokenInt AlexPosn Int           |
+  TokenRemove AlexPosn        |
+  TokenInit AlexPosn          |
+  TokenTail AlexPosn          |
+  TokenEq AlexPosn            |
+  TokenLet AlexPosn           |
+  TokenIn AlexPosn            |
+  TokenIf AlexPosn            |
+  TokenThen AlexPosn          |
+  TokenElse AlexPosn          |
+  TokenConcat AlexPosn        |
+  TokenWhile AlexPosn         |
+  TokenDo AlexPosn            |
+  TokenRead AlexPosn          |
+  TokenWrite AlexPosn         |
+  TokenRevert AlexPosn        |
+  TokenBegin AlexPosn         |
+  TokenEnd AlexPosn           |
+  TokenPower AlexPosn         |
+  TokenInt AlexPosn Int       |
   TokenVar AlexPosn String    |
   TokenTrue AlexPosn          |
   TokenFalse AlexPosn         |

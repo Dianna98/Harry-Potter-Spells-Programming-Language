@@ -23,7 +23,7 @@ Confundo Serpensortia (Defodio k 0) (Defodio l 0)
           Illegibilus s = get[i] fstStream + 3 * get[i] sndStream
           Fidelius s Engorgio (Accio i Legilimens 0) (Geminio 3 Accio i Legilimens 1)
 
-          Illegibilus s : out
+          Illegibilus add s to the end of out
           Depulso s out
 
           Illegibilus i=i+1
