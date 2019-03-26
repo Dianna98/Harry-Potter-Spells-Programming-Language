@@ -1,13 +1,12 @@
+We Diana and Filip solemnly swear that we are up to no good
+
 Alohomora
 
-Fidelius n Pack
-Fidelius i 0
+Illegibilus the next statement stores in variable x the first stream from the file
+Fidelius x Legilimens 0
 
-WingardiumLeviosa Entomorphis i n Imperio
-          Alohomora
-               Flagrate Legilimens i
-               Flagrate Legilimens i
-               Fidelius i Engorgio i 1
-          FiniteIncantatem
+Illegibilus the next two statements print x, such that the program outputs two copies of x
+Flagrate Legilimens 0
+Flagrate Legilimens 0
 
 FiniteIncantatem

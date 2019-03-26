@@ -1,13 +1,11 @@
+We Diana and Filip solemnly swear that we are up to no good
+
 Alohomora
 
-Fidelius n Pack
-Fidelius i 0
+Illegibilus the next statement stores in variable x the first stream from the file
+Fidelius x Legilimens 0
 
-WingardiumLeviosa Entomorphis i n Imperio
-          Alohomora
-               Fidelius x Legilimens i
-               Flagrate Flipendo 0 Ventus x
-               Fidelius i Engorgio i 1
-          FiniteIncantatem
+Illegibilus the next statement prints (0 : (init x))  - drops the last element in x and adds 0 to the beginning
+Flagrate Flipendo 0 Ventus x
 
 FiniteIncantatem

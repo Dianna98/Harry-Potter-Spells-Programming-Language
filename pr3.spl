@@ -1,26 +1,42 @@
+We Diana and Filip solemnly swear that we are up to no good
+
 Alohomora
 
-Fidelius n Pack
+Illegibilus the next statement stores the value 0 in variable i used as an index
 Fidelius i 0
-Fidelius k (Informous horcrux_0)
-Fidelius l (Informous horcrux_1)
-Fidelius x []
 
+Illegibilus the next two statements store the length of the first stream from the input file in variable k and the second one in l
+Fidelius k (Informous Legilimens 0)
+Fidelius l (Informous Legilimens 1)
+
+Illegibilus the next statement initialises out with an empty list
+Fidelius out []
+
+Illegibilus if the lengths of the two streams are equal
 Confundo Serpensortia (Defodio k 0) (Defodio l 0)
 
+     Illegibilus then while i<k
      Incendio Alohomora
      WingardiumLeviosa Entomorphis i k Imperio
           Alohomora
-          Fidelius s Engorgio Accio i horcrux_0 Geminio 3 Accio i horcrux_1
-          Fidelius x Depulso s x
+
+          Illegibilus s = get[i] fstStream + 3 * get[i] sndStream
+          Fidelius s Engorgio (Accio i Legilimens 0) (Geminio 3 Accio i Legilimens 1)
+
+          Illegibilus s : out
+          Depulso s out
+
+          Illegibilus i=i+1
           Fidelius i Engorgio i 1
           FiniteIncantatem
 
-     Flagrate x
+     Illegibilus print out
+     Flagrate out
      FiniteIncantatem
 
+     Illegibilus else print the first stream
      Aguamenti Alohomora
-     Flagrate horcrux_0
+     Flagrate Legilimens 0
      FiniteIncantatem
 
 FiniteIncantatem

@@ -7,14 +7,15 @@ data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
 -- this function parses the data from the input file
 
 parseFile :: String -> [[Int]]
-parseFile s = getStreams x (length (head x))
-               where x = map getInts (map words (lines s))
+parseFile s    | checkFile x = getStreams x (length (head x))
+               | otherwise = error "Morsmordre! Invalid input file!"
+                         where x = map getInts (map words (lines s))
 
 getInts :: [String] -> [Int]
 getInts [] = []
 getInts (s:ss) = case reads s :: [(Integer, String)] of
                          [(_, "")] -> (read s):getInts ss
-                         _         -> error "Morsmordre! Invalid input file! Integer expected!"
+                         _         -> error "Morsmordre! Invalid input file! Non Integer found!"
 
 getStreams :: [[Int]] -> Int -> [[Int]]
 getStreams s n | n < 1 = []
@@ -24,6 +25,11 @@ getN :: [[Int]] -> Int -> [Int]
 getN [] x = []
 getN (s:ss) x  | x < length s = (get x (index s)) : getN ss x
                | otherwise = error "Morsmordre! Invalid input file! There cannot be streams of different lengths!"
+
+checkFile :: [[Int]] -> Bool
+checkFile [] = True
+checkFile [x] = True
+checkFile (x:y:xs) = ((length x) == (length y)) && checkFile (y:xs)
 
 -- this function prints the output in the required format
 write :: [[Int]] -> Int -> String
@@ -108,7 +114,7 @@ remove i (x:xs)     | (fst x) == i = remove i xs
 
 -- this function checks if an expression returns type Int
 isNr :: Expr -> Environment -> Bool
-isNr (Err) e = True
+isNr (Err x) e = True
 isNr (Nr x) e = True
 isNr (Plus x y) e = True
 isNr (Minus x y) e = True
@@ -128,7 +134,7 @@ isNr _ e = False
 
 -- this function checks if an expression returns type Bool
 isBool :: Expr -> Environment -> Bool
-isBool (Err) e = True
+isBool (Err x) e = True
 isBool (Logic x) e = True
 isBool (Less x y) e = True
 isBool (LessEq x y) e = True
@@ -145,7 +151,7 @@ isBool _ e= False
 
 -- this function checks if and expression returns type [Int]
 isArr :: Expr -> Environment -> Bool
-isArr (Err) e = True
+isArr (Err x) e = True
 isArr (Arr x) e = True
 isArr (AddLst x y) e = True
 isArr (AddFst x y) e = True
@@ -160,9 +166,18 @@ isArr (Var x) e = isArr (fst(getVar x e e)) e
 isArr (Br x) e = isArr x e
 isArr _ e = False
 
+-- this function checks if an expression is terminal
+isTerminal :: Expr -> Bool
+isTerminal (Nr x) = True
+isTerminal (Logic x) = True
+isTerminal (Arr x) = True
+isTerminal (Var x) = True
+isTerminal _ = False
+
 -- this function evaluates Expr data type
 evalExpr :: Expr -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
-evalExpr (Err) e out = error "Morsmordre! There is a parsing error!"
+-- returns error for illegal characters
+evalExpr (Err x) e out = error ("Morsmordre! Illegal character(s): "++x++" found!\n")
 -- evaluates variable assignment
 evalExpr (Assign var expr) e out | isNr expr e = ((fst(fst(evalExpr expr e out)),update var (Nr (getNrVal(fst(fst(evalExpr expr e out))))) e),out)
                                  | isBool expr e = ((fst(fst(evalExpr expr e out)),update var (Logic (getBoolVal(fst(fst(evalExpr expr e out))))) e),out)
@@ -238,7 +253,7 @@ evalExpr (GreaterEq x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out))
 evalExpr (Eq x y) e out  | (isNr x e) && (isNr y e) = ((Boolean (nrX == nrY),e),out)
                          | (isBool x e) && (isBool y e) = ((Boolean (boolX == boolY),e),out)
                          | (isArr x e) && (isArr y e) = ((Boolean (arrX == arrY),e),out)
-                         | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Episkey'!"
+                         | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Episkey'!\n"
                                    where
                                         nrX = getNrVal(fst(fst(evalExpr x e out)))
                                         nrY = getNrVal(fst(fst(evalExpr y e out)))
@@ -251,7 +266,7 @@ evalExpr (Eq x y) e out  | (isNr x e) && (isNr y e) = ((Boolean (nrX == nrY),e),
 evalExpr (NotEq x y) e out | (isNr x e) && (isNr y e) = ((Boolean (nrX /= nrY),e),out)
                            | (isBool x e) && (isBool y e) = ((Boolean (boolX /= boolY),e),out)
                            | (isArr x e) && (isArr y e) = ((Boolean (arrX /= arrY),e),out)
-                           | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Impedimenta'!"
+                           | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Impedimenta'!\n"
 
                                    where
                                         nrX = getNrVal(fst(fst(evalExpr x e out)))
@@ -298,7 +313,7 @@ evalExpr (GetXY x y arr) e out = ((Array (get (getNrVal(fst(fst(evalExpr x e out
 
 -- evaluates write expression
 evalExpr (Write x) e out | isArr x e = (fst (evalExpr x e out),out ++ ((getArrVal(fst(fst(evalExpr x e out)))):[]))
-                         | otherwise = error "Expecto Patronum! Stream of integers expected on writing!"
+                         | otherwise = error "Expecto Patronum! Stream of integers expected on writing!\n"
 
 -- evaluates if then else expression
 evalExpr (IfThenElse b x y) e out  | getBoolVal (fst(fst(evalExpr b e out))) = evalBody x e out
@@ -334,6 +349,8 @@ evalExpr (Br x) e out = evalExpr x e out
 -- evaluates Body data type
 evalBody :: Body -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
 evalBody (Begin body) e out = evalBody body e out
-evalBody (Multi expr body) e out = evalBody body (snd(fst exp)) (snd exp)
+evalBody (Multi expr body) e out   | isTerminal expr = error "Morsmordre! Not a statement!\n"
+                                   | otherwise = evalBody body (snd(fst exp)) (snd exp)
                                         where exp = evalExpr expr e out
-evalBody (Single expr) e out = evalExpr expr e out
+evalBody (Single expr) e out       | isTerminal expr = error "Morsmordre! Not a statement!\n"
+                                   | otherwise = evalExpr expr e out

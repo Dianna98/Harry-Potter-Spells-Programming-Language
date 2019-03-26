@@ -22,7 +22,7 @@ main' = do
            sourceText <- readFile "test.spl"
            let parsedProg = parseCalc (alexScanTokens sourceText)
            putStrLn (show parsedProg)
-           input <- readFile "invalidIn.txt"
+           input <- readFile "in3.txt"
            let result = snd(evalBody parsedProg (initEnv 0 (parseFile input)) [] )
            if (length result>0) then
                putStrLn (write result (getMaxLength result 0))
@@ -30,7 +30,7 @@ main' = do
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e
-               putStrLn("\n--------------------")
+               putStrLn("\n----------------------------")
                hPutStr stderr err
-               putStrLn("\n--------------------")
+               putStrLn("\n----------------------------")
                return ()

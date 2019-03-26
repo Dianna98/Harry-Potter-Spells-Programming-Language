@@ -57,7 +57,7 @@ import SpellBookTokens
   ']'                                {TokenArrEnd _ }
   Informous                          {TokenLength _ }
   Pack                               {TokenInputSize _ }
-  Err                                {TokenErr _ }
+  Err                                {TokenErr _ $$ }
 
 %right Appare
 %right Vestigium
@@ -122,7 +122,7 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Legilimens Expr                                                 { GetInArr $2}
      | '[' Arr ']'                                                     { Arr $2 }
      | Pack                                                            { InputSize }
-     | Err                                                             { Err }
+     | Err                                                             { Err $1 }
 
 Arr :  {- empty -}       { [] }
      | int               { [$1]}
@@ -130,8 +130,18 @@ Arr :  {- empty -}       { [] }
 
 {
 parseError :: [SpellBookToken] -> a
-parseError [] = error "Morsmordre! There is a parsing error!"
-parseError (x:xs) = error ("Morsmordre! There is a parsing error on "++((tokenPosn x))++" !")
+parseError [] = error "Morsmordre! Perhaps you forgot to FiniteIncantatem your program."
+parseError (x:xs) = case x of
+                         (TokenDo _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" ! \nPerhaps you forgot to declare a conditional statement within the WingardiumLeviosa spell.\n")
+                         (TokenThen _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to declare a conditional statement within the Confundo spell.\n")
+                         (TokenElse _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps your Inendio spells are incomplete.\n")
+                         (TokenIn _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you assign a value to the variable using Fidelius spell.\n")
+                         (TokenEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to make some spells inside Alohomora-FiniteIncantatem.\n")
+                         (TokenArrEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nYou forgot to close the list!\n")
+                         (TokenRParen _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nMismatched brackets!\n")
+                         (TokenComma _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nYour list cannot have null elements!\n")
+                         (TokenBegin _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" ! \nPerhaps you forgot to write one of the following:\n \t*Imperio in WingardiumLeviosa spell\n \t*Incendio or Aguamenti in Confundo spell\n \t*Vestigium in Appare spell\n")
+                         _ -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\n")
 
 type Environment = [(String, Expr)]
 
@@ -177,7 +187,7 @@ data Expr = Plus Expr Expr
           | Write Expr
           | GetInArr Expr
           | InputSize
-          | Err
+          | Err String
           deriving (Show,Eq)
 
 data Body = Begin Body
