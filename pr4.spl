@@ -1,0 +1,17 @@
+Alohomora
+
+Fidelius i 0
+Fidelius k Informous Legilimens 0
+Fidelius x 0
+Fidelius out []
+
+WingardiumLeviosa Entomorphis i k Imperio
+     Alohomora
+          Fidelius x Engorgio x Accio i Legilimens 0
+          Fidelius out Depulso x out
+          Fidelius i Engorgio i 1
+     FiniteIncantatem
+
+Flagrate out
+
+FiniteIncantatem
