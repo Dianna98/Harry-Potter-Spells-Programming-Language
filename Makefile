@@ -10,8 +10,13 @@
 DEPEND += SpellBookTokens.hs SpellBookGrammar.hs SpellBookEval.hs
 
 # Build an executable for SpellBook interpreter
-myinterpreter: $(DEPEND) SpellBook.hs
+SpellBook: $(DEPEND) SpellBook.hs
 	ghc SpellBook.hs
+	cp SpellBook myinterpreter
+	rm SpellBook
+
+SpellBookInteractive: $(DEPEND) SpellBookInteractive.hs
+	ghc SpellBookInteractive.hs
 
 # Generate ML files from a parser definition file
 SpellBookGrammar.hs : SpellBookGrammar.y
@@ -28,5 +33,5 @@ SpellBookTokens.hs : SpellBookTokens.x
 # Clean up the directory
 clean::
 	rm -rf SpellBookTokens.hs SpellBookGrammar.hs *.hi *.o *.info
-
-
+	rm -f myinterpreter.*
+	rm myinterpreter
