@@ -63,6 +63,7 @@ tokens :-
   \]                                 { tok (\p s -> TokenArrEnd p)}
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
   $letter [$letter $digit \_ \`]*    { tok (\p s -> TokenVar p s) }
+  [$letter $symbol]                  { tok (\p s -> TokenErr p)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -122,6 +123,7 @@ data SpellBookToken =
   TokenArrBeginning AlexPosn  |
   TokenAnd AlexPosn           |
   TokenOr AlexPosn            |
+  TokenErr AlexPosn           |
   TokenArrEnd AlexPosn
   deriving (Eq,Show)
 
@@ -177,6 +179,7 @@ tokenPosn (TokenLength (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenInputSize (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenErr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 
 
 }

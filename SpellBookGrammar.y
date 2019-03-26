@@ -57,6 +57,7 @@ import SpellBookTokens
   ']'                                {TokenArrEnd _ }
   Informous                          {TokenLength _ }
   Pack                               {TokenInputSize _ }
+  Err                                {TokenErr _ }
 
 %right Appare
 %right Vestigium
@@ -120,7 +121,8 @@ Expr : Engorgio Expr Expr                                              { Plus $2
      | Flagrate Expr                                                   { Write $2 }
      | Legilimens Expr                                                 { GetInArr $2}
      | '[' Arr ']'                                                     { Arr $2 }
-     | Pack                                                            { InputSize}
+     | Pack                                                            { InputSize }
+     | Err                                                             { Err }
 
 Arr :  {- empty -}       { [] }
      | int               { [$1]}
@@ -175,6 +177,7 @@ data Expr = Plus Expr Expr
           | Write Expr
           | GetInArr Expr
           | InputSize
+          | Err
           deriving (Show,Eq)
 
 data Body = Begin Body

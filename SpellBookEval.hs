@@ -108,6 +108,7 @@ remove i (x:xs)     | (fst x) == i = remove i xs
 
 -- this function checks if an expression returns type Int
 isNr :: Expr -> Environment -> Bool
+isNr (Err) e = True
 isNr (Nr x) e = True
 isNr (Plus x y) e = True
 isNr (Minus x y) e = True
@@ -127,6 +128,7 @@ isNr _ e = False
 
 -- this function checks if an expression returns type Bool
 isBool :: Expr -> Environment -> Bool
+isBool (Err) e = True
 isBool (Logic x) e = True
 isBool (Less x y) e = True
 isBool (LessEq x y) e = True
@@ -143,6 +145,7 @@ isBool _ e= False
 
 -- this function checks if and expression returns type [Int]
 isArr :: Expr -> Environment -> Bool
+isArr (Err) e = True
 isArr (Arr x) e = True
 isArr (AddLst x y) e = True
 isArr (AddFst x y) e = True
@@ -159,6 +162,7 @@ isArr _ e = False
 
 -- this function evaluates Expr data type
 evalExpr :: Expr -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
+evalExpr (Err) e out = error "Morsmordre! There is a parsing error!"
 -- evaluates variable assignment
 evalExpr (Assign var expr) e out | isNr expr e = ((fst(fst(evalExpr expr e out)),update var (Nr (getNrVal(fst(fst(evalExpr expr e out))))) e),out)
                                  | isBool expr e = ((fst(fst(evalExpr expr e out)),update var (Logic (getBoolVal(fst(fst(evalExpr expr e out))))) e),out)
