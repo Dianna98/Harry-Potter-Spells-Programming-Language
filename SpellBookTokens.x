@@ -10,8 +10,11 @@ $letter = [a-zA-Z]
 $symbol = [~$letter]
 
 tokens :-
-$white+       ;
-  Illegibilus  [$letter $symbol]*          ;
+  Illegibilus [$letter $symbol \n]* MischiefManaged    ;
+  Illegibilus [$letter $symbol]*\n         ;
+  I $white [$letter \- $white]* $white solemnly $white swear $white that $white I $white am $white up $white to $white no $white good    ;
+  We $white [$letter \- $white]* $white solemnly $white swear $white that $white we $white are $white up $white to $white no $white good ;
+  $white+       ;
   Engorgio                           { tok (\p s -> TokenPlus p)}
   Reducio                            { tok (\p s -> TokenMinus p) }
   Geminio                            { tok (\p s -> TokenTimes p) }
@@ -40,9 +43,7 @@ $white+       ;
   Alohomora                          { tok (\p s -> TokenBegin p) }
   Informous                          { tok (\p s -> TokenLength p)}
   Legilimens                         { tok (\p s -> TokenRead p ) }
-  VeraVerto                          { tok (\p s -> TokenForEach p)}
   Flagrate                           { tok (\p s -> TokenWrite p) }
-  Apparate                           { tok (\p s -> TokenWriteFile p)}
   EverteStatum                       { tok (\p s -> TokenRevert p) }
   WingardiumLeviosa                  { tok (\p s -> TokenWhile p) }
   Imperio                            { tok (\p s -> TokenDo p)}
@@ -65,7 +66,7 @@ $white+       ;
   \]                                 { tok (\p s -> TokenArrEnd p)}
   $digit+                            { tok (\p s -> TokenInt p (read s)) }
   $letter [$letter $digit \_ \`]*    { tok (\p s -> TokenVar p s) }
-  [$letter $digit \_]* \.txt         { tok (\p s -> TokenFile p s) }
+  [$letter $symbol]                  { tok (\p s -> TokenErr p s)}
 
 {
 -- Each action has type :: AlexPosn -> String -> SpellBookToken
@@ -78,39 +79,37 @@ data SpellBookToken =
   TokenPlus AlexPosn          |
   TokenMinus AlexPosn         |
   TokenTimes AlexPosn         |
-  TokenDiv AlexPosn              |
+  TokenDiv AlexPosn           |
   TokenMod AlexPosn           |
   TokenDouble AlexPosn        |
   TokenSum AlexPosn           |
-  TokenGet AlexPosn              |
-  TokenHead AlexPosn              |
-  TokenLast AlexPosn              |
+  TokenGet AlexPosn           |
+  TokenHead AlexPosn          |
+  TokenLast AlexPosn          |
   TokenLParen AlexPosn        |
   TokenRParen AlexPosn        |
-  TokenAddEnd AlexPosn            |
+  TokenAddEnd AlexPosn        |
   TokenAddFront AlexPosn      |
-  TokenRemove AlexPosn            |
-  TokenInit AlexPosn             |
-  TokenTail AlexPosn             |
-  TokenEq AlexPosn                |
-  TokenLet AlexPosn              |
-  TokenIn AlexPosn               |
-  TokenIf AlexPosn                |
-  TokenThen AlexPosn             |
-  TokenElse AlexPosn             |
-  TokenConcat AlexPosn            |
-  TokenWhile AlexPosn             |
-  TokenDo AlexPosn               |
-  TokenRead AlexPosn             |
-  TokenWrite AlexPosn             |
-  TokenRevert AlexPosn            |
-  TokenBegin AlexPosn             |
-  TokenEnd AlexPosn               |
-  TokenPower AlexPosn            |
-  TokenInt AlexPosn Int           |
+  TokenRemove AlexPosn        |
+  TokenInit AlexPosn          |
+  TokenTail AlexPosn          |
+  TokenEq AlexPosn            |
+  TokenLet AlexPosn           |
+  TokenIn AlexPosn            |
+  TokenIf AlexPosn            |
+  TokenThen AlexPosn          |
+  TokenElse AlexPosn          |
+  TokenConcat AlexPosn        |
+  TokenWhile AlexPosn         |
+  TokenDo AlexPosn            |
+  TokenRead AlexPosn          |
+  TokenWrite AlexPosn         |
+  TokenRevert AlexPosn        |
+  TokenBegin AlexPosn         |
+  TokenEnd AlexPosn           |
+  TokenPower AlexPosn         |
+  TokenInt AlexPosn Int       |
   TokenVar AlexPosn String    |
-  TokenForEach AlexPosn           |
-  TokenWriteFile AlexPosn     |
   TokenTrue AlexPosn          |
   TokenFalse AlexPosn         |
   TokenGetXY AlexPosn         |
@@ -122,12 +121,12 @@ data SpellBookToken =
   TokenEqEq AlexPosn          |
   TokenNotEq AlexPosn         |
   TokenComma AlexPosn         |
-  TokenFile AlexPosn String   |
   TokenLength AlexPosn        |
   TokenInputSize AlexPosn     |
   TokenArrBeginning AlexPosn  |
   TokenAnd AlexPosn           |
   TokenOr AlexPosn            |
+  TokenErr AlexPosn String    |
   TokenArrEnd AlexPosn
   deriving (Eq,Show)
 
@@ -168,7 +167,6 @@ tokenPosn (TokenVar (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenInt (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenWriteFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGetXY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNot (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEqEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -180,12 +178,11 @@ tokenPosn (TokenNotEq (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenComma (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenArrBeginning (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenArrEnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenForEach (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenFile (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLength (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenInputSize (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenErr (AlexPn a l c) _) = show(l) ++ ":" ++ show(c)
 
 
 }
