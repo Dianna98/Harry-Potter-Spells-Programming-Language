@@ -1,2 +1,7 @@
-# Programming-Language
-Design and implementation of a domain specific programming language that performs certain simple computations on potentially unbounded integer sequences.
+# SpellBook
+Harry Potter inspired programming language
+
+Authors:  Diana-Alexandra Crintea
+          Filip-Constantin Andonie
+
+University of Southampton
