@@ -10,18 +10,18 @@ main :: IO ()
 main = catch main' noParse
 
 main' = do
-            (fileName : _ ) <- getArgs
-            sourceText <- readFile fileName
-            let parsedProg = parseCalc (alexScanTokens sourceText)
-            input <- getContents
-            let result = snd(evalBody parsedProg (initEnv 0 (parseFile input)) [] )
-            if (length result>0) then
-                putStrLn (write result (length (head result)))
-                else putStrLn ""
+           (fileName : _ ) <- getArgs
+           sourceText <- readFile fileName
+           let parsedProg = parseCalc (alexScanTokens sourceText)
+           input <- getContents
+           let result = snd(evalBody parsedProg (initEnv 0 (parseFile input)) [] )
+           if (length result>0) then
+               putStrLn (write result (getMaxLength result 0))
+               else putStr ""
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e
-               putStrLn("\n--------------------")
+               putStrLn("\n----------------------------")
                hPutStr stderr err
-               putStrLn("\n--------------------")
+               putStrLn("\n----------------------------")
                return ()

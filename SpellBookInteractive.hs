@@ -9,16 +9,20 @@ import System.IO
 main :: IO ()
 main = catch main' noParse
 
-env :: Environment
+env::Environment
 env = []
 
-main' = do putStrLn ("SpellBook - 'I solemnly swear that I am up to no good'>")
-           sourceText <- getLine
-           let parsedProg = parseCalc (alexScanTokens sourceText)
-           putStrLn ("Evaluates to " ++ show(fst(fst(evalBody (parsedProg) env []))) ++ "\n")
-           let env = snd(fst(evalBody (parsedProg) env []))
-           --putStrLn (show env)
-           main'
+main' = do
+          let loop = do
+                    putStr ("SpellBook - 'I solemnly swear that I am up to no good'>\t")
+                    sourceText <- getLine
+                    let parsedProg = parseCalc (alexScanTokens sourceText)
+                    let result = fst(evalBody (parsedProg) env [])
+                    putStrLn ("Result:\t" ++ (getActual(fst result)) ++ "\n")
+                    let updated = snd(result)
+                    let env = updated
+                    loop
+          loop
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e

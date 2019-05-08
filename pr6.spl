@@ -1,0 +1,14 @@
+We Diana and Filip solemnly swear that we are up to no good
+
+Alohomora
+
+Illegibilus the next statement stores in variable x the first stream from the file
+Fidelius x Legilimens 0
+
+Illegibilus the next statement prints (0 : x)
+Flagrate x
+
+Illegibilus the next statement prints (0 : (init x))  - drops the last element in x and adds 0 to the beginning
+Flagrate Flipendo 0 Ventus x
+
+FiniteIncantatem

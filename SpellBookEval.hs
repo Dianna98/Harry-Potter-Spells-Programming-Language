@@ -1,29 +1,37 @@
 module SpellBookEval where
 import SpellBookGrammar
-import Data.List
 
 data Value = Integer Int | Boolean Bool | Array [Int] deriving (Show,Eq)
 
 -- this function parses the data from the input file
-
 parseFile :: String -> [[Int]]
-parseFile s = getStreams x (length (head x))
-               where x = map getInts (map words (lines s))
+parseFile s    | checkFile x = getStreams x (length (head x))
+               | otherwise = error "Morsmordre! Invalid input file!"
+                         where x = map getInts (map words (lines s))
 
+-- this function turns a list of strings into a list of ints
 getInts :: [String] -> [Int]
 getInts [] = []
 getInts (s:ss) = case reads s :: [(Integer, String)] of
                          [(_, "")] -> (read s):getInts ss
-                         _         -> error "Morsmordre! Invalid input file! Integer expected!"
+                         _         -> error "Morsmordre! Invalid input file! Non Integer found!\n"
 
+-- this function zips a list of lists
 getStreams :: [[Int]] -> Int -> [[Int]]
 getStreams s n | n < 1 = []
                | otherwise = getStreams s (n-1) ++ ((getN s (n-1)):[])
 
+-- this function returns the list of the x th element from each list
 getN :: [[Int]] -> Int -> [Int]
 getN [] x = []
 getN (s:ss) x  | x < length s = (get x (index s)) : getN ss x
-               | otherwise = error "Morsmordre! Invalid input file! There cannot be streams of different lengths!"
+               | otherwise = error "Morsmordre! Invalid input file! There cannot be streams of different lengths!\n"
+
+-- this function checks if all streams in the file have the same length
+checkFile :: [[Int]] -> Bool
+checkFile [] = True
+checkFile [x] = True
+checkFile (x:y:xs) = ((length x) == (length y)) && checkFile (y:xs)
 
 -- this function prints the output in the required format
 write :: [[Int]] -> Int -> String
@@ -50,32 +58,32 @@ initEnv n (x:xs) = ("horcrux_" ++ (show n),Arr x):initEnv (n+1) xs
 -- this function returns the actual integer of a terminal Nr expression and gives an error if another type is found
 getNr :: Expr -> Int
 getNr (Nr x) = x
-getNr _ = error "Expecto Patronum! Type mismatched! Integer Expected!"
+getNr _ = error "Expecto Patronum! Type mismatched! Integer Expected!\n"
 
 -- this function returns the actual Bool of a terminal Logic expression and gives an error if another type is found
 getBool :: Expr -> Bool
 getBool (Logic x) = x
-getBool _ = error "Expecto Patronum! Type mismatched! Boolean Expected!"
+getBool _ = error "Expecto Patronum! Type mismatched! Boolean Expected!\n"
 
 -- this function returns the actual array [Int] of a terminal Arr expression and gives an error if another type is found
 getArr :: Expr -> [Int]
 getArr (Arr x) = x
-getArr _ = error "Expecto Patronum! Type mismatched! Array of integers expected!"
+getArr _ = error "Expecto Patronum! Type mismatched! Array of integers expected!\n"
 
 -- this function returns the actual integer from a Value Integer and gives an error if another type is found
 getNrVal :: Value -> Int
 getNrVal (Integer x) = x
-getNrVal _ = error "Expecto Patronum! Type mismatched! Integer Expected!"
+getNrVal _ = error "Expecto Patronum! Type mismatched! Integer Expected!\n"
 
 -- this function returns the actual bool from a Value Boolean and gives an error if another type is found
 getBoolVal :: Value -> Bool
 getBoolVal (Boolean x) = x
-getBoolVal _ = error "Expecto Patronum! Type mismatched! Boolean Expected!"
+getBoolVal _ = error "Expecto Patronum! Type mismatched! Boolean Expected!\n"
 
 -- this function returns the actual array of integers from a Value Array and gives an error if another type is found
 getArrVal :: Value -> [Int]
 getArrVal (Array x) = x
-getArrVal _ = error "Expecto Patronum! Type mismatched! Array of integers expected!"
+getArrVal _ = error "Expecto Patronum! Type mismatched! Array of integers expected!\n"
 
 -- this function updates a variable's value in the Environment
 update :: String -> Expr -> Environment -> Environment
@@ -85,10 +93,26 @@ update var expr (e:es)   | var == fst(e) = update var expr es
 
 -- this function returns the expression associated to a value within the Environment
 getVar :: String -> Environment -> Environment -> (Expr,Environment)
-getVar x [] env = error ("Riddikulus! Variable "++x++" not in scope!")
+getVar x [] env = error ("Riddikulus! Variable '"++x++"' not in scope!\n")
 getVar x (e:es) env  | (fst e) == x = (snd e,env)
                      | ((take 8 x) == "horcrux_") && (lookup x env == Nothing) = (Arr [], update x (Arr []) env)
                      | otherwise = getVar x es env
+
+-- this function returns the value of a terminal expression
+getVal :: Expr -> String
+getVal (Nr x) = show x
+getVal (Logic True) = "lumos"
+getVal (Logic False) = "nox"
+getVal (Arr x) = show x
+getVal (Var x) = show x
+getVal _ = ""
+
+-- this function returns the actual value of a Value
+getActual :: Value -> String
+getActual (Integer x) = show x
+getActual (Boolean True) = "lumos"
+getActual (Boolean False) = "nox"
+getActual (Array x) = show x
 
 -- this function returns an indexed array
 index :: [Int] -> [(Int,Int)]
@@ -96,19 +120,19 @@ index x = zip [0,1..] x
 
 -- this function returns the Int on the position i in the array
 get :: Int -> [(Int,Int)] -> Int
-get i [] = error "Baubillious! Index out of bounds!"
+get i [] = error "Baubillious! Index out of bounds!\n"
 get i (x:xs)  | (fst x) == i = snd x
               | otherwise = get i xs
 
 -- this function removes the i th element in the array
 remove :: Int -> [(Int,Int)] -> [Int]
-remove i [] = error "Baubillious! Index out of bounds!"
+remove i [] = []
 remove i (x:xs)     | (fst x) == i = remove i xs
                     | otherwise = (snd x) : (remove i xs)
 
 -- this function checks if an expression returns type Int
 isNr :: Expr -> Environment -> Bool
-isNr (Err) e = True
+isNr (Err x) e = True
 isNr (Nr x) e = True
 isNr (Plus x y) e = True
 isNr (Minus x y) e = True
@@ -128,7 +152,7 @@ isNr _ e = False
 
 -- this function checks if an expression returns type Bool
 isBool :: Expr -> Environment -> Bool
-isBool (Err) e = True
+isBool (Err x) e = True
 isBool (Logic x) e = True
 isBool (Less x y) e = True
 isBool (LessEq x y) e = True
@@ -145,7 +169,7 @@ isBool _ e= False
 
 -- this function checks if and expression returns type [Int]
 isArr :: Expr -> Environment -> Bool
-isArr (Err) e = True
+isArr (Err x) e = True
 isArr (Arr x) e = True
 isArr (AddLst x y) e = True
 isArr (AddFst x y) e = True
@@ -160,9 +184,18 @@ isArr (Var x) e = isArr (fst(getVar x e e)) e
 isArr (Br x) e = isArr x e
 isArr _ e = False
 
+-- this function checks if an expression is terminal
+isTerminal :: Expr -> Bool
+isTerminal (Nr x) = True
+isTerminal (Logic x) = True
+isTerminal (Arr x) = True
+isTerminal (Var x) = True
+isTerminal _ = False
+
 -- this function evaluates Expr data type
 evalExpr :: Expr -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
-evalExpr (Err) e out = error "Morsmordre! There is a parsing error!"
+-- returns error for illegal characters
+evalExpr (Err x) e out = error ("Morsmordre! Illegal character(s): '"++ x ++"' found!\n")
 -- evaluates variable assignment
 evalExpr (Assign var expr) e out | isNr expr e = ((fst(fst(evalExpr expr e out)),update var (Nr (getNrVal(fst(fst(evalExpr expr e out))))) e),out)
                                  | isBool expr e = ((fst(fst(evalExpr expr e out)),update var (Logic (getBoolVal(fst(fst(evalExpr expr e out))))) e),out)
@@ -238,7 +271,7 @@ evalExpr (GreaterEq x y) e out = ((Boolean ((getNrVal(fst(fst(evalExpr x e out))
 evalExpr (Eq x y) e out  | (isNr x e) && (isNr y e) = ((Boolean (nrX == nrY),e),out)
                          | (isBool x e) && (isBool y e) = ((Boolean (boolX == boolY),e),out)
                          | (isArr x e) && (isArr y e) = ((Boolean (arrX == arrY),e),out)
-                         | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Episkey'!"
+                         | otherwise = error "Avada Kedavra! Type mismatched in Episkey spell! You cannot mix spells and charms!\n"
                                    where
                                         nrX = getNrVal(fst(fst(evalExpr x e out)))
                                         nrY = getNrVal(fst(fst(evalExpr y e out)))
@@ -251,7 +284,7 @@ evalExpr (Eq x y) e out  | (isNr x e) && (isNr y e) = ((Boolean (nrX == nrY),e),
 evalExpr (NotEq x y) e out | (isNr x e) && (isNr y e) = ((Boolean (nrX /= nrY),e),out)
                            | (isBool x e) && (isBool y e) = ((Boolean (boolX /= boolY),e),out)
                            | (isArr x e) && (isArr y e) = ((Boolean (arrX /= arrY),e),out)
-                           | otherwise = error "Avada Kedavra! Type mismatched in equality expression 'Impedimenta'!"
+                           | otherwise = error "Avada Kedavra! Type mismatched in Impedimenta spell! You cannot mix spells and charms!\n"
 
                                    where
                                         nrX = getNrVal(fst(fst(evalExpr x e out)))
@@ -284,9 +317,11 @@ evalExpr (Concat x y) e out = ((Array ((getArrVal(fst(fst(evalExpr x e out)))) +
 evalExpr (Get x y) e out = ((Integer (get (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr y e out)))))),e),out)
 
 -- evaluates expression that removes the x th element from a list
-evalExpr (Remove x (Var y)) e out = ((Array array,update y (Arr array) e),out)
+evalExpr (Remove x (Var y)) e out  | getNrVal(fst(fst(evalExpr x e out))) < (length (getArrVal (fst(fst(evalExpr (Var y) e out))))) = ((Array array,update y (Arr array) e),out)
+                                   | otherwise = error "Baubillious! Index out of bounds!"
                                         where array = remove (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr (Var y) e out)))))
-evalExpr (Remove x y) e out = ((Array (remove (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr y e out)))))),e),out)
+evalExpr (Remove x y) e out | getNrVal(fst(fst(evalExpr x e out))) < (length (getArrVal (fst(fst(evalExpr y e out))))) = ((Array (remove (getNrVal(fst(fst(evalExpr x e out)))) (index(getArrVal (fst(fst(evalExpr y e out)))))),e),out)
+                            | otherwise = error "Baubillious! Index out of bounds!"
 
 -- evaluates expression that returns the array from index x to y
 evalExpr (GetXY x y arr) e out = ((Array (get (getNrVal(fst(fst(evalExpr x e out)))) (getNrVal(fst(fst(evalExpr y e out)))) (index(getArrVal (fst(fst(evalExpr arr e out)))))),e),out)
@@ -298,7 +333,7 @@ evalExpr (GetXY x y arr) e out = ((Array (get (getNrVal(fst(fst(evalExpr x e out
 
 -- evaluates write expression
 evalExpr (Write x) e out | isArr x e = (fst (evalExpr x e out),out ++ ((getArrVal(fst(fst(evalExpr x e out)))):[]))
-                         | otherwise = error "Expecto Patronum! Stream of integers expected on writing!"
+                         | otherwise = error "Expecto Patronum! Stream of integers expected with Flagrate spell!\n"
 
 -- evaluates if then else expression
 evalExpr (IfThenElse b x y) e out  | getBoolVal (fst(fst(evalExpr b e out))) = evalBody x e out
@@ -334,6 +369,8 @@ evalExpr (Br x) e out = evalExpr x e out
 -- evaluates Body data type
 evalBody :: Body -> Environment -> [[Int]] -> ((Value,Environment),[[Int]])
 evalBody (Begin body) e out = evalBody body e out
-evalBody (Multi expr body) e out = evalBody body (snd(fst exp)) (snd exp)
+evalBody (Multi expr body) e out   | isTerminal expr = error ("Morsmordre! Not a valid spell: "++ (show (getVal expr)) ++"\n")
+                                   | otherwise = evalBody body (snd(fst exp)) (snd exp)
                                         where exp = evalExpr expr e out
-evalBody (Single expr) e out = evalExpr expr e out
+evalBody (Single expr) e out       | isTerminal expr = error ("Morsmordre! Not a valid spell: "++ (show (getVal expr)) ++"\n")
+                                   | otherwise = evalExpr expr e out

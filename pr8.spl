@@ -1,0 +1,38 @@
+We Diana and Filip solemnly swear that we are up to no good
+
+Alohomora
+
+Illegibilus the next statement stores the value 0 in variable i used as an index
+Fidelius i 0
+Fidelius j 1
+
+Illegibilus the next statement store the length of the first stream from the input file in variable k
+Fidelius k (Informous Legilimens 0)
+
+Illegibilus the next two statements initialise x with 0 and out with an empty list
+Fidelius x 0
+Fidelius out []
+
+Depulso (Accio 0 Legilimens 0) out
+
+Illegibilus while j<k
+WingardiumLeviosa Entomorphis j k Imperio
+     Alohomora
+          Illegibilus x = get[i] + get[j] fstStream
+          Fidelius x Engorgio (Accio i Legilimens 0) (Accio j Legilimens 0)
+
+          Illegibilus x : out
+          Depulso x out
+
+          Illegibilus i=i+1
+          Fidelius i Engorgio i 1
+
+          Illegibilus j=j+1
+          Fidelius j Engorgio j 1
+
+     FiniteIncantatem
+
+Illegibilus print out
+Flagrate out
+
+FiniteIncantatem

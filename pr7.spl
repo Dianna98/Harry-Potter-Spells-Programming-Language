@@ -1,0 +1,43 @@
+We Diana and Filip solemnly swear that we are up to no good
+
+Alohomora
+
+Illegibilus the next statement stores the value 0 in variable i used as an index
+Fidelius i 0
+
+Illegibilus the next two statements store the length of the first stream from the input file in variable k and the second one in l
+Fidelius k (Informous Legilimens 0)
+Fidelius l (Informous Legilimens 1)
+
+Illegibilus the next statement initialises out with an empty list
+Fidelius out []
+
+Illegibilus if the lengths of the two streams are equal
+Confundo Serpensortia (Defodio k 0) (Defodio l 0)
+
+     Illegibilus then while i<k
+     Incendio Alohomora
+     WingardiumLeviosa Entomorphis i k Imperio
+          Alohomora
+
+          Illegibilus s = get[i] fstStream - get[i] sndStream
+          Fidelius s Reducio (Accio i Legilimens 0) (Accio i Legilimens 1)
+
+          Illegibilus add s to the end of out
+          Depulso s out
+
+          Illegibilus i=i+1
+          Fidelius i Engorgio i 1
+          FiniteIncantatem
+
+     Illegibilus print out
+     Flagrate out
+     Flagrate Legilimens 0
+     FiniteIncantatem
+
+     Illegibilus else print the first stream
+     Aguamenti Alohomora
+     Flagrate Legilimens 0
+     FiniteIncantatem
+
+FiniteIncantatem

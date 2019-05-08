@@ -3406,10 +3406,11 @@ happyReduction_45 _
 	)
 
 happyReduce_46 = happySpecReduce_1  5 happyReduction_46
-happyReduction_46 _
+happyReduction_46 (HappyTerminal (TokenErr _ happy_var_1))
 	 =  HappyAbsSyn5
-		 (Err
+		 (Err happy_var_1
 	)
+happyReduction_46 _  = notHappyAtAll 
 
 happyReduce_47 = happySpecReduce_0  6 happyReduction_47
 happyReduction_47  =  HappyAbsSyn6
@@ -3488,7 +3489,7 @@ happyNewToken action sts stk (tk:tks) =
 	TokenArrEnd _ -> cont 54;
 	TokenLength _ -> cont 55;
 	TokenInputSize _ -> cont 56;
-	TokenErr _ -> cont 57;
+	TokenErr _ happy_dollar_dollar -> cont 57;
 	_ -> happyError' ((tk:tks), [])
 	}
 
@@ -3525,8 +3526,18 @@ happySeq = happyDontSeq
 
 
 parseError :: [SpellBookToken] -> a
-parseError [] = error "Morsmordre! There is a parsing error!"
-parseError (x:xs) = error ("Morsmordre! There is a parsing error on "++((tokenPosn x))++" !")
+parseError [] = error "Morsmordre! Perhaps you forgot to FiniteIncantatem your program."
+parseError (x:xs) = case x of
+                         (TokenDo _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" ! \nPerhaps you forgot to declare a conditional statement within the WingardiumLeviosa spell.\n")
+                         (TokenThen _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to declare a conditional statement within the Confundo spell.\n")
+                         (TokenElse _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps your Inendio spells are incomplete.\n")
+                         (TokenIn _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you assign a value to the variable using Fidelius spell.\n")
+                         (TokenEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to make some spells inside Alohomora-FiniteIncantatem.\n")
+                         (TokenArrEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nYou forgot to close the list!\n")
+                         (TokenRParen _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nMismatched brackets!\n")
+                         (TokenComma _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nYour list cannot have null elements!\n")
+                         (TokenBegin _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" ! \nPerhaps you forgot to write one of the following:\n \t*Imperio in WingardiumLeviosa spell\n \t*Incendio or Aguamenti in Confundo spell\n \t*Vestigium in Appare spell\n")
+                         _ -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\n")
 
 type Environment = [(String, Expr)]
 
@@ -3572,14 +3583,19 @@ data Expr = Plus Expr Expr
           | Write Expr
           | GetInArr Expr
           | InputSize
-          | Err
+          | Err String
           deriving (Show,Eq)
 
 data Body = Begin Body
           | Multi Expr Body
           | Single Expr
           deriving (Show,Eq)
-{-# LINE 1 "templates/GenericTemplate.hs" #-}
+{-# LINE 1 "templates\GenericTemplate.hs" #-}
+{-# LINE 1 "templates\\\\GenericTemplate.hs" #-}
+{-# LINE 1 "<built-in>" #-}
+{-# LINE 1 "<command-line>" #-}
+{-# LINE 8 "<command-line>" #-}
+{-# LINE 1 "D:/GitHub/haskell-platform/build/ghc-bindist/local/lib/include/ghcversion.h" #-}
 
 
 
@@ -3595,6 +3611,8 @@ data Body = Begin Body
 
 
 
+{-# LINE 8 "<command-line>" #-}
+{-# LINE 1 "F:/Users/randy/AppData/Local/Temp/ghc15608_0/ghc_2.h" #-}
 
 
 
@@ -3769,26 +3787,8 @@ data Body = Begin Body
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{-# LINE 8 "<command-line>" #-}
+{-# LINE 1 "templates\\\\GenericTemplate.hs" #-}
 -- Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp 
 
 
@@ -3799,7 +3799,7 @@ data Body = Begin Body
 
 
 
-
+{-# LINE 43 "templates\\\\GenericTemplate.hs" #-}
 
 data Happy_IntList = HappyCons Int Happy_IntList
 
@@ -3809,18 +3809,11 @@ data Happy_IntList = HappyCons Int Happy_IntList
 
 
 
+{-# LINE 65 "templates\\\\GenericTemplate.hs" #-}
 
+{-# LINE 75 "templates\\\\GenericTemplate.hs" #-}
 
-
-
-
-
-
-
-
-
-
-
+{-# LINE 84 "templates\\\\GenericTemplate.hs" #-}
 
 infixr 9 `HappyStk`
 data HappyStk a = HappyStk a (HappyStk a)
@@ -3844,9 +3837,9 @@ happyAccept j tk st sts (HappyStk ans _) =
 -----------------------------------------------------------------------------
 -- Arrays only: do the next action
 
+{-# LINE 137 "templates\\\\GenericTemplate.hs" #-}
 
-
-
+{-# LINE 147 "templates\\\\GenericTemplate.hs" #-}
 indexShortOffAddr arr off = arr Happy_Data_Array.! off
 
 
@@ -3959,14 +3952,7 @@ happyDropStk n (x `HappyStk` xs) = happyDropStk (n - ((1)::Int)) xs
 -----------------------------------------------------------------------------
 -- Moving to a new state after a reduction
 
-
-
-
-
-
-
-
-
+{-# LINE 267 "templates\\\\GenericTemplate.hs" #-}
 happyGoto action j tk st = action j j tk (HappyState action)
 
 
@@ -4025,14 +4011,7 @@ happyDontSeq a b = b
 -- of deciding to inline happyGoto everywhere, which increases the size of
 -- the generated parser quite a bit.
 
-
-
-
-
-
-
-
-
+{-# LINE 333 "templates\\\\GenericTemplate.hs" #-}
 {-# NOINLINE happyShift #-}
 {-# NOINLINE happySpecReduce_0 #-}
 {-# NOINLINE happySpecReduce_1 #-}
@@ -4044,4 +4023,3 @@ happyDontSeq a b = b
 {-# NOINLINE happyFail #-}
 
 -- end of Happy Template.
-
