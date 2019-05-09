@@ -1,0 +1,27 @@
+We Diana and Filip solemnly swear that we are up to no good
+
+Alohomora
+
+Fidelius x Legilimens 0
+Fidelius i 0
+Fidelius k []
+Fidelius out []
+
+WingardiumLeviosa Entomorphis i Informous x Imperio
+     Alohomora
+     Depulso (Engorgio 1 i) k
+     Fidelius j 0
+     Fidelius n 0
+     WingardiumLeviosa CarpeRetractum j i Imperio
+          Alohomora
+          Fidelius n Engorgio n (Geminio (Accio j x) (Accio j EverteStatum k))
+          Fidelius j Engorgio j 1
+          FiniteIncantatem
+
+     Depulso n out
+     Fidelius i Engorgio i 1
+     FiniteIncantatem
+
+Flagrate out
+
+FiniteIncantatem

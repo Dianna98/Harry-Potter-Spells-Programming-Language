@@ -1,0 +1,38 @@
+We Diana and Filip solemnly swear that we are up to no good
+
+Alohomora
+
+Illegibilus the next statement checks if there are at least two input streams
+Illegibilus parameters:
+               x - first stream
+               y - second stream
+               out - initialised empty output
+               i - index
+               MischiefManaged
+
+Confundo Deprimo Pack 2 Incendio
+     Alohomora
+
+     Fidelius x Legilimens 0
+     Fidelius y Legilimens 1
+     Fidelius out []
+     Fidelius i 0
+
+     WingardiumLeviosa (Entomorphis i Informous x) Imperio
+          Alohomora
+
+          Illegibilus add the difference x[i]-y[i] to the end of out
+          Depulso Reducio (Accio i x) (Accio i y) out
+
+          Fidelius i Engorgio i 1
+          FiniteIncantatem
+
+     Flagrate out
+     Flagrate x
+
+     FiniteIncantatem
+     Aguamenti Alohomora
+     Flagrate Legilimens 0
+     FiniteIncantatem
+
+FiniteIncantatem

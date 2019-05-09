@@ -134,7 +134,7 @@ parseError [] = error "Morsmordre! Perhaps you forgot to FiniteIncantatem your p
 parseError (x:xs) = case x of
                          (TokenDo _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" ! \nPerhaps you forgot to declare a conditional statement within the WingardiumLeviosa spell.\n")
                          (TokenThen _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to declare a conditional statement within the Confundo spell.\n")
-                         (TokenElse _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps your Inendio spells are incomplete.\n")
+                         (TokenElse _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps your Incendio spells are incomplete.\n")
                          (TokenIn _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you assign a value to the variable using Fidelius spell.\n")
                          (TokenEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nPerhaps you forgot to make some spells inside Alohomora-FiniteIncantatem.\n")
                          (TokenArrEnd _ ) -> error ("Morsmordre! There is an error on "++((tokenPosn x))++" !\nYou forgot to close the list!\n")
